@@ -1,0 +1,1025 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<title>Denmark Flood Map: Elevation Map, Sea Level Rise Map</title>
+<meta name="description" content="Denmark Flood Map shows the map of the area which could get flooded if the water level rises to a particular elevation. Sea level rise map. Bathymetric map, ocean depth. Effect of Global Warming and Climate Change."/>
+
+<meta name="keywords" content="Denmark flood map, Denmark flood water level, Denmark elevation map, Denmark floodplain map, Denmark sea level rise"/>
+
+<!-- Load Leaflet from CDN -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    
+     <!-- Load Esri Leaflet from CDN -->
+  <script src="https://unpkg.com/esri-leaflet@2.3.2/dist/esri-leaflet.js"
+  integrity="sha512-6LVib9wGnqVKIClCduEwsCub7iauLXpwrd5njR2J507m3A2a4HXJDLMiSZzjcksag3UluIfuW1KzuWVI5n/cuQ=="
+  crossorigin=""></script>
+  <!-- Load Esri Leaflet Geocoder from CDN -->
+  <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.2/dist/esri-leaflet-geocoder.css"
+    integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+    crossorigin="">
+
+    <script src="https://unpkg.com/leaflet-image@latest/leaflet-image.js"></script>
+    
+ <!-- twitter card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Denmark Flood Map: Water Level Elevation Map">
+<meta name="twitter:description" content="Denmark Flood Map shows the map of the area which could get flooded if the water level rises to a particular elevation. It may help flood risk assessment or flood management. Sea level rise map. Bathymetric map, ocean depth.">
+<meta name="twitter:image" content="https://www.floodmap.net/img/preview.png">
+<link rel="image_src" href="/img/preview.png" />
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+<!--Leaflet Foolscreen -->
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+<!-- favicon -->
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="theme-color" content="#ffffff">
+<!-- favicon end -->
+
+    <!-- Bootstrap -->
+    <link href="/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<style id="antiClickjack">body{display:none !important;}</style><script type="text/javascript">if (self === top){ var antiClickjack = document.getElementById("antiClickjack"); antiClickjack.parentNode.removeChild(antiClickjack); } else { top.location = self.location; } </script>
+<style>
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  font-size:1.2em;
+  background-color: white;
+  text-align: center;
+  color: #337ab7;
+  padding:10px 10px 10px 10px;
+  /* border-top:solid 3px #337ab7; */
+}
+</style>
+<style>
+    .leaflet-tile-container img {
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.05);
+}
+  #basemaps-wrapper {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 400;
+    background: white;
+    padding: 10px;
+  }
+  #basemaps {
+    margin-bottom: 5px;
+  }
+  #previewbox {
+    position: absolute;
+    top: 30%;
+    right: 30%;
+    z-index: 400;
+    background: white;
+    padding: 10px;
+  }
+</style>
+
+<!-- Facebook Pixel Code -->
+<script>
+    !function (f, b, e, v, n, t, s) {
+        if (f.fbq) return; n = f.fbq = function () {
+            n.callMethod ?
+            n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+        };
+        if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+        n.queue = []; t = b.createElement(e); t.async = !0;
+        t.src = v; s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s)
+    }(window, document, 'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '804263323267397');
+    fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=804263323267397&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Facebook Pixel Code -->
+<script data-ad-client="ca-pub-6549306531419697" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-350192-13', 'auto');
+</script>
+<script>
+    (function () {
+
+        const handleReady = ({ detail }) => {
+            const { memberInfo } = detail;
+            if (memberInfo) {
+                if (memberInfo.profileImageUrl)
+                    $("#userProfile").attr("src", memberInfo.profileImageUrl);
+                ga('set', 'userId', memberInfo.id);
+                ga('send', 'pageview');
+            }
+            else {
+                ga('send', 'pageview');
+            }
+        }
+        document.addEventListener('MemberSpace.ready', handleReady);
+
+        //Event after login
+        const handleMemberInfo = ({ detail }) => {
+            const { memberInfo } = detail;
+            var year = new Date().getFullYear();
+            if (memberInfo && year < 2023) {
+                var postMemberInfo = {
+                    "email": memberInfo.email,
+                    "name": memberInfo.name,
+                    "customField14339": memberInfo.customSignupFields[1].value,
+                    "customField14340": memberInfo.customSignupFields[2].value,
+                    "customField14341": memberInfo.customSignupFields[3].value,
+                    "customField14342": memberInfo.customSignupFields[4].value,
+                    "customField14343": memberInfo.customSignupFields[5].value,
+                    "customField14344": memberInfo.customSignupFields[6].value
+                };
+
+                try {
+                    $.ajax({
+                        type: "POST",
+                        url: "https://www.floodmap.net/StripeConnect/PostUpdateCust.aspx",
+                        data: postMemberInfo
+                    });
+                }
+                catch (err) {
+                }
+            }
+        }
+        document.addEventListener('MemberSpace.member.info', handleMemberInfo);
+
+    }());
+    var MemberSpace = window.MemberSpace || { subdomain: "floodmap", domain: "members.floodmap.net" };
+    (function (d) {
+        var s = d.createElement("script");
+        s.src = "https://cdn.memberspace.com/scripts/widgets.js";
+        var e = d.getElementsByTagName("script")[0];
+        e.parentNode.insertBefore(s, e);
+    }(document));
+</script>
+</head>
+<body style="padding-bottom:200px;">
+    
+<nav class="navbar navbar-inverse navbar-static-top" >
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          
+          <a class="navbar-brand" style="padding-top:0px;padding-bottom:0px;" href="/">
+          <img class="img-responsive" style="height:50px;width:264px;" src="/logo.png"/></a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            
+            <li class="active" style="color:white;font-weight:bold;font-size:1.5em;"><a href="https://www.floodmap.net/pro/"><b>FloodMap Pro</b></a></li>
+            <li><a href="/Elevation/CountryList/">Cities Elevation Maps</a></li>
+            <li><a href="https://distancecalculator.globefeed.com/Country_Distance_Calculator.asp">Distance Calculator</a></li>
+            <li><a href="/contact/">Contact</a></li>
+            
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active" style="color:white;font-weight:bold;font-size:1.5em;margin-top:6px;"><img class="img-circle" id="userProfile" style="height:40px;width:40px;" src="/img/userprofile.png" /><a href="https://members.floodmap.net/member/sign_in" style="display:inline;">Login</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                
+            </div>
+        </div>
+    <div class="row">
+      <div class="col-md-12">
+      <div class="panel panel-primary" >
+          <div class="panel-heading" >
+          <h3 class="panel-title" style="padding-bottom:10px;">
+          <b>Denmark Flood Map: Elevation Map, Sea Level Rise Map</b>
+          </h3>
+              
+              <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fwww.floodmap.net&layout=button_count&size=large&width=107&height=28&appId" width="107" height="28" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <a class="twitter-share-button" style="display:inline;" data-size="large" href="https://www.floodmap.net">Tweet</a>
+              <br />
+              <a id="linkFMPro" style="font-size:1.5em;color:yellow;" href="https://www.floodmap.net/pro/">👉<b> FloodMap Pro</b></a>
+</div>
+<div class="panel-body">
+    
+        <div class="row">
+            <div class="col-md-3">
+                <div class="panel panel-primary" style="color:#337ab7;">
+                <div class="panel-body form-group">
+                    <div class="panel panel-primary">
+                        <div class="panel-body form-group">
+                            <label style="font-size:1.2em;"><input type="radio" name="floodmap" value="floodmap"  checked /> FloodMap</label><br>
+                            <label style="font-size:1.2em;"><input type="radio" name="floodmap" value="colfloodmap" /><span style="color:blue;">Color </span><span style="color:green;">Flood</span><span style="color:red;">Map</span></label>
+                            <label style="font-size:1.2em;"><input type="radio" name="floodmap" value="colelevmap" /><span style="color:blue;">Color </span><span style="color:green;">Elevation</span><span style="color:red;">Map</span></label>
+                            <label style="font-size:1.2em;"><span class="badge" style="background-color:yellow;color:red;">NEW!</span> <a style="text-decoration:underline" target="_blank" href="/3DFloodMap/">3D Flood Map and Simulation</a></label>
+                        </div>
+                    </div>
+                    <div id="setElev" class="form-group form-inline" >
+                       <label>Elevation/Height/Water Level (-/+):</label>
+                    <input class="form-control" type="text" id="elev" style="width:100px;" value="50" />
+                    <button class="btn btn-warning" style="width:100px;" type="button" onclick="setElev(document.getElementById('elev').value);">Set</button>&nbsp;&nbsp;<b><span id="curElev" style="color:red;"></span><span style="color:red;"> meter.</span></b><br />
+                    </div>
+                    <div class="panel panel-primary" id="colOpt" style="display:none;">
+                        <div class="panel-body form-group form-inline" >
+                            <label for="seaChk" style="font-weight:normal;"><input id="seaChk" name="seaChk" type="checkbox"> Include Sea Depth <span style="font-size:0.8em;">(Suitable for coastal areas and ocean bathymetry only)</span></label>
+                             <label style="color:brown;">Color Palette</label><br />
+                            <div class="radio">
+                              <label><input type="radio" name="colorpal" value="rainbow" checked> Rainbow <img class="img-responsive" src="/img/rainbowcolors.png"></label>
+                            </div>
+                            <div class="radio">
+                              <label><input type="radio" name="colorpal" value="floodmap" > Classic <img class="img-responsive" src="/img/floodmapcolors.png"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <span id="clickOnLabel"><b><span style="color:orange;">Click on the Map</span> to get/set the flood water level at the location.</b></span><br />
+                    <br><a href='#' class="btn btn-success" data-toggle='modal' data-target='#myModal'>Generate/Download Map</a>
+                    <br><br><a href="mailto:contact@floodmap.net?subject=Features Suggestions For FloodMap Pro">✍️ <b>Suggest Features</b></a>
+                </div>
+            </div>
+            </div>
+            <div id="mapPanel" class="col-md-7">
+                <div style="position:relative;">
+    <div id="map_canvas" style="width:100%;height:600px;">
+ </div>
+        <div id="basemaps-wrapper" class="leaflet-bar">
+        <select id="basemaps" >
+            
+    <option value="OpenStreetMap">OpenStreetMap</option>
+    <option value="OpenTopoMap">OpenTopoMap</option>
+    <option value="Topographic">Topographic</option>
+    <option value="Imagery">Imagery</option>
+    <option value="ImageryClarity">Imagery (Clarity)</option>
+    <option value="ImageryFirefly">Imagery (Firefly)</option>
+    <option value="Streets">Streets</option>
+    <option value="NationalGeographic">National Geographic</option>
+    <option value="Oceans">Oceans</option>
+    <option value="Gray">Gray</option>
+    <option value="DarkGray">Dark Gray</option>
+    <option value="ShadedRelief">Shaded Relief</option>
+    <option value="Physical">Physical</option>
+    
+  </select>
+</div>
+                    <div id="previewbox" style="width:40%;height:40%;display:none;text-align:center;border-radius:4px;overflow:auto;">
+                        <span>For complete and larger view, subscribe to</span><br>
+                        <span style="font-size:1.2em; color:crimson;text-align:center;" ><b>FloodMap Pro</b></span><br />
+                    <span style="font-size:1.2em;text-align:center;"><b>Only $9/mo </b></span><br />
+                        <a style="text-align:center;" href="https://members.floodmap.net/member/plans/f54d573b7e" class="btn btn-success active" role="button"  aria-pressed="true"><b>Start your 7 day trial</b></a>
+                        <br><span>💡 Your card will be charged after your 7 days trial ends. But if you cancel the plan before your 7 days trial ends, your card will not be charged.</span>
+
+                    </div>
+                    
+                    </div>
+                
+            </div>
+            <div class="col-md-2" >
+                <div class="panel panel-primary" style="border-width:4px;border-color:crimson;">
+                <div class="panel-body">
+                <span style="font-size:1.2em; color:crimson;text-align:center;" ><b>FloodMap Pro</b></span><br />
+                    <span style="font-size:1.2em;text-align:center;"><b>Only $9/mo </b></span><br />
+                    <span class="badge" style="color:red;background-color:yellow;">NEW</span><a target="_blank" href="/3DFloodMap/" style="text-decoration:underline"> <b>3D Flood Map and Simulation</b></a><br />
+                        🗺️ Interactive Color Flood Map<br />
+                        ⛰️ Interactive Elevation Map<br />
+                        💾 Generate or Download Map<br />
+                        🔍 Search for a Place and get/set its Elevation.<br />
+                        🖱️ Click on the map and get/set its Elevation.<br />
+                        🛰️ Select Map Style like Imagery(Satellite), Oceans etc.<br />
+                        🌊 Set minus/negative value for ocean depth or bathymetric study.<br />
+                        🚫 No Ads.<br />
+                        🖥️ Large Map with Full Screen option.<br /><br />
+                    <a id="signUpBtn" href="https://members.floodmap.net/member/plans/f54d573b7e" class="btn btn-success active" role="button" aria-pressed="true" style="text-align:center;font-size:1.2em;"><b>Start your 7 day trial</b></a><br />
+                    <span>💡 Your card will be charged after your 7 days trial ends. But if you cancel the plan before your 7 days trial ends, your card will not be charged.</span>
+                    
+                    </div>   
+                    </div> 
+                </div>
+            </div>
+<div>
+<p><b>Get Link:</b>
+<input class="styled" type="text" id="link" style="width:95%"/></p>
+<p>*"Denmark <b>Flood Map</b> application does not show current or historic flood level but it shows all the area below set elevation."</p>
+<br />
+<p><b>Disclaimer: Please note that this elevation flood map on its own is not sufficient for analysis of flood risk since there are many other factors involved. Surface runoff, flow diversion, land type etc. are also responsible for the flood coverage in addition to elevation. But this flood map should help in some extent in the following areas:</b></p>
+          </div>
+      </div>
+
+      </div>
+          </div>
+      </div>
+ <div class="row">
+     <div class="col-md-12">
+                <div class="panel panel-primary">
+                  
+                  <div class="panel-heading">
+          
+                  <h3 class="panel-title"><b>About</b></h3>
+                  </div>
+                  <div class="panel-body">
+  	        
+	        <ul>
+	        <li>Denmark Flood Map may be useful to some extent for flood risk assessment or in flood management, flood control etc.</li>
+	        <li>Denmark Flood Map may help to provide flood alert/flood warning if flood water level at certain point is rising.</li>
+	        <li>Denmark Flood Map can help to locate places at higher levels to escape from floods or in flood rescue/flood relief operation.</li>
+	        <li>It can also provide floodplain map and floodline map for streams and rivers.</li>
+            <li>Effect of sea level rise or sea level change can be seen on the map. This could be helpful in coastal areas.</li>
+            <li>Global Warmin and Sea Levele Rise are the effects of Climate Change</li>
+	        <li>It can help to perform elevation analysis of an area for any purpose like city/town planning, new construction etc.</li>
+	        <li>We also think that it can help in planning irrigation system and water management.</li>
+            <li>By setting negative elevation, Bathymetry study is also possible.</li>
+	        </ul>
+            <p>The elevation layered on the map is in meters and is from sea level. The elevation is zero for the sea level. Negative elevation means depth below sea level.</p>
+            <p>Data Sources: <a href="https://www.mapzen.com/">Mazpzen</a>, <a title="The National Map" href="https://www.usgs.gov/core-science-systems/national-geospatial-program/national-map">TNM</a>, <a href="https://www.usgs.gov/centers/eros/science/usgs-eros-archive-digital-elevation-shuttle-radar-topography-mission-srtm-1-arc?qt-science_center_objects=0#qt-science_center_objects">SRTM</a>, <a href="https://www.usgs.gov/land-resources/eros/coastal-changes-and-impacts">GMTED</a>, <a href="https://www.ngdc.noaa.gov/mgg/global/global.html">ETOPO1</a></p>
+            <p><b>Notes:</b>Before using this Flood Map application, please note that for various technical or non technical reasons the application is not guaranteed free of bugs or inaccuracies.
+            </p>
+        </div>
+                    
+                </div>
+            </div>
+ </div>
+
+      <footer style="text-align:center;">
+      © 2020 FloodMap.net | <a href="https://www.floodMap.net/termsconditions">Terms & Conditions</a> | <a href="https://www.floodMap.net/privacypolicy">Privacy Policy</a> | <a href="/contact">Contact</a>
+</footer>
+
+    </div><!-- /.container -->
+    
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="margin-bottom:60px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Try FloodMap Pro Today</h4>
+      </div>
+      <div class="modal-body" style="color:#337ab7;">
+          <h4><b>Unlock This Feature - Try FloodMap Pro</b></h4>
+<div class="panel panel-primary" style="font-size:1.2em;border-width:4px;border-color:crimson;">
+                <div class="panel-body" style="color:black;">
+                <span style="font-size:1.2em; color:crimson;text-align:center;" ><b>FloodMap Pro</b></span><br />
+                        <span style="font-size:1.2em;text-align:center;color:black;"><b>Only $9/mo </b></span><br />
+                    <span class="badge" style="color:red;background-color:yellow;">NEW</span><a target="_blank" href="/3DFloodMap/" style="text-decoration:underline"> <b>3D Flood Map and Simulation</b></a><br />
+                        🗺️ Interactive Color Flood Map<br />
+                        ⛰️ Interactive Elevation Map<br />
+                        💾 Generate or Download Map<br />
+                        🔍 Search for a Place and get/set its Elevation.<br />
+                        🖱️ Click on the map and get/set its Elevation.<br />
+                        🛰️ Select Map Style like Imagery(Satellite), Oceans etc.<br />
+                        🌊 Set minus/negative value for ocean depth or bathymetric study.<br />
+                        🚫 No Ads.<br />
+                        🖥️ Large Map with Full Screen option.<br /><br />
+                    <a id="buttonLink" href="https://members.floodmap.net/member/plans/f54d573b7e" class="btn btn-success active" role="button" aria-pressed="true" style="text-align:center;font-size:1.2em;"><b>Start your 7 day trial</b></a><br />
+                    <span>💡 Your card will be charged after your 7 days trial ends. But if you cancel the plan before your 7 days trial ends, your card will not be charged.</span><br />
+                    </div>   
+                    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+       </div>
+    </div>
+  </div>
+</div>
+<script>
+    $('#linkFMPro').on('click',
+        function (e) {
+            ga('send', 'event', 'Pro', 'linkFMProClick');
+        }
+    );
+    $('#demoModal').on('click',
+        function (e) {
+            ga('send', 'event', 'Pro', 'linkDemoModal');
+        }
+    );
+    $('#demoPage').on('click',
+        function (e) {
+            ga('send', 'event', 'Pro', 'linkDemoPage');
+        }
+    );
+    $('#buttonLink').on('click',
+        function (e) {
+            ga('send', 'event', 'Pro', 'modalLinkClick');
+        }
+    );
+    $('#signUpBtn').on('click',
+        function (e) {
+            ga('send', 'event', 'Pro', 'signUpClick');
+        }
+    );
+    $('#myModal').on('shown.bs.modal', function (e) {
+        ga('send', 'event', 'Pro', 'subscribeOpen');
+    });
+</script>
+<script>
+    var autoPopup = false;
+    if (autoPopup)
+        startAutoPopup();
+    function startAutoPopup(){
+        setTimeout(function () {
+            $('#myModal').modal();
+        }, 300000);
+    }
+</script>
+
+<script>
+    /* esri-leaflet-geocoder - v2.3.2 - Tue Nov 12 2019 12:54:26 GMT-0600 (Central Standard Time)
+ * Copyright (c) 2019 Environmental Systems Research Institute, Inc.
+ * Apache-2.0 */
+    !function (e, t) { "object" == typeof exports && "undefined" != typeof module ? t(exports, require("leaflet"), require("esri-leaflet")) : "function" == typeof define && define.amd ? define(["exports", "leaflet", "esri-leaflet"], t) : t((e.L = e.L || {}, e.L.esri = e.L.esri || {}, e.L.esri.Geocoding = {}), e.L, e.L.esri) }(this, function (e, t, s) { "use strict"; function i(e) { return new p(e) } function o(e) { return new f(e) } function r(e) { return new v(e) } function n(e) { return new _(e) } function a(e, t) { return new m(e, t) } function l(e) { return new y(e) } function u(e) { return new x(e) } function h(e) { return new b(e) } function d(e) { return new S(e) } function c(e) { return new C(e) } var g = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/", p = s.Task.extend({ path: "findAddressCandidates", params: { outSr: 4326, forStorage: !1, outFields: "*", maxLocations: 20 }, setters: { address: "address", neighborhood: "neighborhood", city: "city", subregion: "subregion", region: "region", postal: "postal", country: "country", text: "singleLine", category: "category", token: "token", key: "magicKey", fields: "outFields", forStorage: "forStorage", maxLocations: "maxLocations", countries: "sourceCountry" }, initialize: function (e) { e = e || {}, e.url = e.url || g, s.Task.prototype.initialize.call(this, e) }, within: function (e) { return e = t.latLngBounds(e), this.params.searchExtent = s.Util.boundsToExtent(e), this }, nearby: function (e, s) { var i = t.latLng(e); return this.params.location = i.lng + "," + i.lat, this.params.distance = Math.min(Math.max(s, 2e3), 5e4), this }, run: function (e, t) { return this.options.customParam && (this.params[this.options.customParam] = this.params.singleLine, delete this.params.singleLine), this.request(function (s, i) { var o = this._processGeocoderResponse, r = s ? void 0 : o(i); e.call(t, s, { results: r }, i) }, this) }, _processGeocoderResponse: function (e) { for (var i = [], o = 0; o < e.candidates.length; o++) { var r = e.candidates[o]; if (r.extent) var n = s.Util.extentToBounds(r.extent); i.push({ text: r.address, bounds: n, score: r.score, latlng: t.latLng(r.location.y, r.location.x), properties: r.attributes }) } return i } }), f = s.Task.extend({ path: "reverseGeocode", params: { outSR: 4326, returnIntersection: !1 }, setters: { distance: "distance", language: "langCode", intersection: "returnIntersection" }, initialize: function (e) { e = e || {}, e.url = e.url || g, s.Task.prototype.initialize.call(this, e) }, latlng: function (e) { var s = t.latLng(e); return this.params.location = s.lng + "," + s.lat, this }, run: function (e, s) { return this.request(function (i, o) { var r; r = i ? void 0 : { latlng: t.latLng(o.location.y, o.location.x), address: o.address }, e.call(s, i, r, o) }, this) } }), v = s.Task.extend({ path: "suggest", params: {}, setters: { text: "text", category: "category", countries: "countryCode", maxSuggestions: "maxSuggestions" }, initialize: function (e) { e = e || {}, e.url || (e.url = g, e.supportsSuggest = !0), s.Task.prototype.initialize.call(this, e) }, within: function (e) { e = t.latLngBounds(e), e = e.pad(.5); var i = e.getCenter(), o = e.getNorthWest(); return this.params.location = i.lng + "," + i.lat, this.params.distance = Math.min(Math.max(i.distanceTo(o), 2e3), 5e4), this.params.searchExtent = s.Util.boundsToExtent(e), this }, nearby: function (e, s) { var i = t.latLng(e); return this.params.location = i.lng + "," + i.lat, this.params.distance = Math.min(Math.max(s, 2e3), 5e4), this }, run: function (e, t) { if (this.options.supportsSuggest) return this.request(function (s, i) { e.call(t, s, i, i) }, this); console.warn("this geocoding service does not support asking for suggestions") } }), _ = s.Service.extend({ initialize: function (e) { e = e || {}, e.url ? (s.Service.prototype.initialize.call(this, e), this._confirmSuggestSupport()) : (e.url = g, e.supportsSuggest = !0, s.Service.prototype.initialize.call(this, e)) }, geocode: function () { return i(this) }, reverse: function () { return o(this) }, suggest: function () { return r(this) }, _confirmSuggestSupport: function () { this.metadata(function (e, t) { e || (t.capabilities && t.capabilities.indexOf("Suggest") > -1 ? this.options.supportsSuggest = !0 : this.options.supportsSuggest = !1, this.options.customParam = t.singleLineAddressField.name) }, this) } }), m = t.Evented.extend({ options: { zoomToResult: 0, useMapBounds: 12, searchBounds: null }, initialize: function (e, s) { if (t.Util.setOptions(this, s), this._control = e, !s || !s.providers || !s.providers.length) throw new Error("You must specify at least one provider"); this._providers = s.providers }, _geocode: function (e, s, i) { var o, r = 0, n = [], a = t.Util.bind(function (t, s) { r-- , t || (s && (n = n.concat(s)), r <= 0 && (o = this._boundsFromResults(n), this.fire("results", { results: n, bounds: o, latlng: o ? o.getCenter() : void 0, text: e }, !0), this.options.zoomToResult && o && this._control._map.fitBounds(o), this.fire("load"))) }, this); if (s) r++ , i.results(e, s, this._searchBounds(), a); else for (var l = 0; l < this._providers.length; l++)r++ , this._providers[l].results(e, s, this._searchBounds(), a) }, _suggest: function (e) { var s = this._providers.length, i = 0, o = t.Util.bind(function (e, o) { return t.Util.bind(function (t, r) { if (s -= 1, i += r.length, t) return this._control._clearProviderSuggestions(o), void this._control._finalizeSuggestions(s, i); if (r.length) for (var n = 0; n < r.length; n++)r[n].provider = o; else this._control._renderSuggestions(r); o._lastRender !== e && this._control._clearProviderSuggestions(o), r.length && this._control._input.value === e && (o._lastRender = e, this._control._renderSuggestions(r)), this._control._finalizeSuggestions(s, i) }, this) }, this); this._pendingSuggestions = []; for (var r = 0; r < this._providers.length; r++) { var n = this._providers[r], a = n.suggestions(e, this._searchBounds(), o(e, n)); this._pendingSuggestions.push(a) } }, _searchBounds: function () { return null !== this.options.searchBounds ? this.options.searchBounds : !1 === this.options.useMapBounds ? null : !0 === this.options.useMapBounds ? this._control._map.getBounds() : this.options.useMapBounds <= this._control._map.getZoom() ? this._control._map.getBounds() : null }, _boundsFromResults: function (e) { if (e.length) { for (var s = t.latLngBounds([0, 0], [0, 0]), i = [], o = [], r = e.length - 1; r >= 0; r--) { var n = e[r]; o.push(n.latlng), n.bounds && n.bounds.isValid() && !n.bounds.equals(s) && i.push(n.bounds) } for (var a = t.latLngBounds(o), l = 0; l < i.length; l++)a.extend(i[l]); return a } }, _getAttribution: function () { for (var e = [], t = this._providers, s = 0; s < t.length; s++)t[s].options.attribution && e.push(t[s].options.attribution); return e.join(", ") } }), y = _.extend({ options: { label: "Places and Addresses", maxResults: 5 }, suggestions: function (e, t, s) { var i = this.suggest().text(e); return t && i.within(t), this.options.countries && i.countries(this.options.countries), this.options.categories && i.category(this.options.categories), i.maxSuggestions(this.options.maxResults), i.run(function (e, t, i) { var o = []; if (!e) for (; i.suggestions.length && o.length <= this.options.maxResults - 1;) { var r = i.suggestions.shift(); r.isCollection || o.push({ text: r.text, unformattedText: r.text, magicKey: r.magicKey }) } s(e, o) }, this) }, results: function (e, t, s, i) { var o = this.geocode().text(e); return t && o.key(t), o.maxLocations(this.options.maxResults), s && o.within(s), this.options.forStorage && o.forStorage(!0), this.options.countries && o.countries(this.options.countries), this.options.categories && o.category(this.options.categories), o.run(function (e, t) { i(e, t.results) }, this) } }), x = t.Control.extend({ includes: t.Evented.prototype, options: { position: "topleft", collapseAfterResult: !0, expanded: !1, allowMultipleResults: !0, placeholder: "Search for places or addresses", title: "Location Search" }, initialize: function (e) { t.Util.setOptions(this, e), e && e.providers && e.providers.length || (e || (e = {}), e.providers = [l()]), this._geosearchCore = a(this, e), this._geosearchCore._providers = e.providers, this._geosearchCore.addEventParent(this); for (var s = 0; s < this._geosearchCore._providers.length; s++)this._geosearchCore._providers[s].addEventParent(this); this._geosearchCore._pendingSuggestions = [], t.Control.prototype.initialize.call(this, e) }, _renderSuggestions: function (e) { var s; e.length > 0 && (this._suggestions.style.display = "block"); for (var i, o, r = [], n = 0; n < e.length; n++) { var a = e[n]; if (!o && this._geosearchCore._providers.length > 1 && s !== a.provider.options.label && (o = t.DomUtil.create("div", "geocoder-control-header", a.provider._contentsElement), o.textContent = a.provider.options.label, o.innerText = a.provider.options.label, s = a.provider.options.label), i || (i = t.DomUtil.create("ul", "geocoder-control-list", a.provider._contentsElement)), -1 === r.indexOf(a.text)) { var l = t.DomUtil.create("li", "geocoder-control-suggestion", i); l.innerHTML = a.text, l.provider = a.provider, l["data-magic-key"] = a.magicKey, l.unformattedText = a.unformattedText } else for (var u = 0; u < i.childNodes.length; u++)i.childNodes[u].innerHTML === a.text && (i.childNodes[u]["data-magic-key"] += "," + a.magicKey); r.push(a.text) } this.getPosition().indexOf("top") > -1 && (this._suggestions.style.maxHeight = this._map.getSize().y - this._suggestions.offsetTop - this._wrapper.offsetTop - 10 + "px"), this.getPosition().indexOf("bottom") > -1 && this._setSuggestionsBottomPosition() }, _setSuggestionsBottomPosition: function () { this._suggestions.style.maxHeight = this._map.getSize().y - this._map._controlCorners[this.getPosition()].offsetHeight - this._wrapper.offsetHeight + "px", this._suggestions.style.top = -this._suggestions.offsetHeight - this._wrapper.offsetHeight + 20 + "px" }, _boundsFromResults: function (e) { if (e.length) { for (var s = t.latLngBounds([0, 0], [0, 0]), i = [], o = [], r = e.length - 1; r >= 0; r--) { var n = e[r]; o.push(n.latlng), n.bounds && n.bounds.isValid() && !n.bounds.equals(s) && i.push(n.bounds) } for (var a = t.latLngBounds(o), l = 0; l < i.length; l++)a.extend(i[l]); return a } }, clear: function () { this._clearAllSuggestions(), this.options.collapseAfterResult && (this._input.value = "", this._lastValue = "", this._input.placeholder = "", t.DomUtil.removeClass(this._wrapper, "geocoder-control-expanded")), !this._map.scrollWheelZoom.enabled() && this._map.options.scrollWheelZoom && this._map.scrollWheelZoom.enable() }, _clearAllSuggestions: function () { this._suggestions.style.display = "none"; for (var e = 0; e < this.options.providers.length; e++)this._clearProviderSuggestions(this.options.providers[e]) }, _clearProviderSuggestions: function (e) { e._contentsElement.innerHTML = "" }, _finalizeSuggestions: function (e, s) { e || (t.DomUtil.removeClass(this._input, "geocoder-control-loading"), this.getPosition().indexOf("bottom") > -1 && this._setSuggestionsBottomPosition(), s || this._clearAllSuggestions()) }, _setupClick: function () { t.DomUtil.addClass(this._wrapper, "geocoder-control-expanded"), this._input.focus() }, disable: function () { this._input.disabled = !0, t.DomUtil.addClass(this._input, "geocoder-control-input-disabled"), t.DomEvent.removeListener(this._wrapper, "click", this._setupClick, this) }, enable: function () { this._input.disabled = !1, t.DomUtil.removeClass(this._input, "geocoder-control-input-disabled"), t.DomEvent.addListener(this._wrapper, "click", this._setupClick, this) }, getAttribution: function () { for (var e = [], t = 0; t < this._providers.length; t++)this._providers[t].options.attribution && e.push(this._providers[t].options.attribution); return e.join(", ") }, geocodeSuggestion: function (e) { var t = e.target || e.srcElement; t.classList.contains("geocoder-control-suggestions") || t.classList.contains("geocoder-control-header") || (t.classList.length < 1 && (t = t.parentNode), this._geosearchCore._geocode(t.unformattedText, t["data-magic-key"], t.provider), this.clear()) }, onAdd: function (e) { s.Util.setEsriAttribution(e), this._map = e, this._wrapper = t.DomUtil.create("div", "geocoder-control"), this._input = t.DomUtil.create("input", "geocoder-control-input leaflet-bar", this._wrapper), this._input.title = this.options.title, this.options.expanded && (t.DomUtil.addClass(this._wrapper, "geocoder-control-expanded"), this._input.placeholder = this.options.placeholder), this._suggestions = t.DomUtil.create("div", "geocoder-control-suggestions leaflet-bar", this._wrapper); for (var i = 0; i < this.options.providers.length; i++)this.options.providers[i]._contentsElement = t.DomUtil.create("div", null, this._suggestions); var o = this._geosearchCore._getAttribution(); return e.attributionControl && e.attributionControl.addAttribution(o), t.DomEvent.addListener(this._input, "focus", function (e) { this._input.placeholder = this.options.placeholder, t.DomUtil.addClass(this._wrapper, "geocoder-control-expanded") }, this), t.DomEvent.addListener(this._wrapper, "click", this._setupClick, this), t.DomEvent.addListener(this._suggestions, "mousedown", this.geocodeSuggestion, this), t.DomEvent.addListener(this._input, "blur", function (e) { this.clear() }, this), t.DomEvent.addListener(this._input, "keydown", function (e) { var s = (e.target || e.srcElement).value; t.DomUtil.addClass(this._wrapper, "geocoder-control-expanded"); for (var i, o = this._suggestions.querySelectorAll(".geocoder-control-suggestion"), r = this._suggestions.querySelectorAll(".geocoder-control-selected")[0], n = 0; n < o.length; n++)if (o[n] === r) { i = n; break } switch (e.keyCode) { case 13: r ? (this._input.value = r.innerText, this._geosearchCore._geocode(r.unformattedText, r["data-magic-key"], r.provider), this.clear()) : this.options.allowMultipleResults && s.length >= 2 ? (this._geosearchCore._geocode(this._input.value, void 0), this.clear()) : 1 === o.length ? (t.DomUtil.addClass(o[0], "geocoder-control-selected"), this._geosearchCore._geocode(o[0].innerHTML, o[0]["data-magic-key"], o[0].provider)) : (this.clear(), this._input.blur()), t.DomEvent.preventDefault(e); break; case 38: r && t.DomUtil.removeClass(r, "geocoder-control-selected"); var a = o[i - 1]; r && a ? t.DomUtil.addClass(a, "geocoder-control-selected") : t.DomUtil.addClass(o[o.length - 1], "geocoder-control-selected"), t.DomEvent.preventDefault(e); break; case 40: r && t.DomUtil.removeClass(r, "geocoder-control-selected"); var l = o[i + 1]; r && l ? t.DomUtil.addClass(l, "geocoder-control-selected") : t.DomUtil.addClass(o[0], "geocoder-control-selected"), t.DomEvent.preventDefault(e); break; default: for (var u = 0; u < this._geosearchCore._pendingSuggestions.length; u++) { var h = this._geosearchCore._pendingSuggestions[u]; h && h.abort && !h.id && h.abort() } } }, this), t.DomEvent.addListener(this._input, "keyup", t.Util.throttle(function (e) { var s = e.which || e.keyCode, i = (e.target || e.srcElement).value; return i.length < 2 ? (this._lastValue = this._input.value, this._clearAllSuggestions(), void t.DomUtil.removeClass(this._input, "geocoder-control-loading")) : 27 === s ? void this._clearAllSuggestions() : void (13 !== s && 38 !== s && 40 !== s && this._input.value !== this._lastValue && (this._lastValue = this._input.value, t.DomUtil.addClass(this._input, "geocoder-control-loading"), this._geosearchCore._suggest(i))) }, 50, this), this), t.DomEvent.disableClickPropagation(this._wrapper), t.DomEvent.addListener(this._suggestions, "mouseover", function (t) { e.scrollWheelZoom.enabled() && e.options.scrollWheelZoom && e.scrollWheelZoom.disable() }), t.DomEvent.addListener(this._suggestions, "mouseout", function (t) { !e.scrollWheelZoom.enabled() && e.options.scrollWheelZoom && e.scrollWheelZoom.enable() }), this._geosearchCore.on("load", function (e) { t.DomUtil.removeClass(this._input, "geocoder-control-loading"), this.clear(), this._input.blur() }, this), this._wrapper } }), b = s.FeatureLayerService.extend({ options: { label: "Feature Layer", maxResults: 5, bufferRadius: 1e3, formatSuggestion: function (e) { return e.properties[this.options.searchFields[0]] } }, initialize: function (e) { s.FeatureLayerService.prototype.initialize.call(this, e), "string" == typeof this.options.searchFields && (this.options.searchFields = [this.options.searchFields]), this._suggestionsQuery = this.query(), this._resultsQuery = this.query() }, suggestions: function (e, t, s) { var i = this._suggestionsQuery.where(this._buildQuery(e)).returnGeometry(!1); return t && i.intersects(t), this.options.idField && i.fields([this.options.idField].concat(this.options.searchFields)), i.run(function (e, t, i) { if (e) s(e, []); else { this.options.idField = i.objectIdFieldName; for (var o = [], r = t.features.length - 1; r >= 0; r--) { var n = t.features[r]; o.push({ text: this.options.formatSuggestion.call(this, n), unformattedText: n.properties[this.options.searchFields[0]], magicKey: n.id }) } s(e, o.slice(0, this.options.maxResults)) } }, this) }, results: function (e, s, i, o) { var r = this._resultsQuery; return s ? (delete r.params.where, r.featureIds([s])) : r.where(this._buildQuery(e)), i && r.within(i), r.run(t.Util.bind(function (e, t) { for (var s = [], i = 0; i < t.features.length; i++) { var r = t.features[i]; if (r) { var n = this._featureBounds(r), a = { latlng: n.getCenter(), bounds: n, text: this.options.formatSuggestion.call(this, r), properties: r.properties, geojson: r }; s.push(a), delete this._resultsQuery.params.objectIds } } o(e, s) }, this)) }, orderBy: function (e, t) { this._suggestionsQuery.orderBy(e, t) }, _buildQuery: function (e) { for (var t = [], s = this.options.searchFields.length - 1; s >= 0; s--) { var i = 'upper("' + this.options.searchFields[s] + '")'; t.push(i + " LIKE upper('%" + e + "%')") } return this.options.where ? this.options.where + " AND (" + t.join(" OR ") + ")" : t.join(" OR ") }, _featureBounds: function (e) { var s = t.geoJson(e); if ("Point" === e.geometry.type) { var i = s.getBounds().getCenter(), o = this.options.bufferRadius / 40075017 * 360 / Math.cos(180 / Math.PI * i.lat), r = this.options.bufferRadius / 40075017 * 360; return t.latLngBounds([i.lat - r, i.lng - o], [i.lat + r, i.lng + o]) } return s.getBounds() } }), S = s.MapService.extend({ options: { layers: [0], label: "Map Service", bufferRadius: 1e3, maxResults: 5, formatSuggestion: function (e) { return e.properties[e.displayFieldName] + " <small>" + e.layerName + "</small>" } }, initialize: function (e) { s.MapService.prototype.initialize.call(this, e), this._getIdFields() }, suggestions: function (e, t, s) { return this.find().text(e).fields(this.options.searchFields).returnGeometry(!1).layers(this.options.layers).run(function (e, t, i) { var o = []; if (!e) { var r = Math.min(this.options.maxResults, t.features.length); i.results = i.results.reverse(); for (var n = 0; n < r; n++) { var a = t.features[n], l = i.results[n], u = l.layerId, h = this._idFields[u]; a.layerId = u, a.layerName = this._layerNames[u], a.displayFieldName = this._displayFields[u], h && o.push({ text: this.options.formatSuggestion.call(this, a), unformattedText: a.properties[a.displayFieldName], magicKey: l.attributes[h] + ":" + u }) } } s(e, o.reverse()) }, this) }, results: function (e, t, s, i) { var o, r = []; if (t) { var n = t.split(":")[0], a = t.split(":")[1]; o = this.query().layer(a).featureIds(n) } else o = this.find().text(e).fields(this.options.searchFields).layers(this.options.layers); return o.run(function (e, t, s) { if (!e) { s.results && (s.results = s.results.reverse()); for (var o = 0; o < t.features.length; o++) { var n = t.features[o]; if (a = a || s.results[o].layerId, n && void 0 !== a) { var l = this._featureBounds(n); n.layerId = a, n.layerName = this._layerNames[a], n.displayFieldName = this._displayFields[a]; var u = { latlng: l.getCenter(), bounds: l, text: this.options.formatSuggestion.call(this, n), properties: n.properties, geojson: n }; r.push(u) } } } i(e, r.reverse()) }, this) }, _featureBounds: function (e) { var s = t.geoJson(e); if ("Point" === e.geometry.type) { var i = s.getBounds().getCenter(), o = this.options.bufferRadius / 40075017 * 360 / Math.cos(180 / Math.PI * i.lat), r = this.options.bufferRadius / 40075017 * 360; return t.latLngBounds([i.lat - r, i.lng - o], [i.lat + r, i.lng + o]) } return s.getBounds() }, _layerMetadataCallback: function (e) { return t.Util.bind(function (t, s) { if (!t) { this._displayFields[e] = s.displayField, this._layerNames[e] = s.name; for (var i = 0; i < s.fields.length; i++) { var o = s.fields[i]; if ("esriFieldTypeOID" === o.type) { this._idFields[e] = o.name; break } } } }, this) }, _getIdFields: function () { this._idFields = {}, this._displayFields = {}, this._layerNames = {}; for (var e = 0; e < this.options.layers.length; e++) { var t = this.options.layers[e]; this.get(t, {}, this._layerMetadataCallback(t)) } } }), C = _.extend({ options: { label: "Geocode Server", maxResults: 5 }, suggestions: function (e, t, s) { if (this.options.supportsSuggest) { var i = this.suggest().text(e); return t && i.within(t), i.run(function (e, t, i) { var o = []; if (!e) for (; i.suggestions.length && o.length <= this.options.maxResults - 1;) { var r = i.suggestions.shift(); r.isCollection || o.push({ text: r.text, unformattedText: r.text, magicKey: r.magicKey }) } s(e, o) }, this) } return s(void 0, []), !1 }, results: function (e, t, s, i) { var o = this.geocode().text(e); return t && o.key(t), o.maxLocations(this.options.maxResults), s && o.within(s), o.run(function (e, t) { i(e, t.results) }, this) } }); e.VERSION = "2.3.2", e.Geocode = p, e.geocode = i, e.ReverseGeocode = f, e.reverseGeocode = o, e.Suggest = v, e.suggest = r, e.GeocodeService = _, e.geocodeService = n, e.Geosearch = x, e.geosearch = u, e.GeosearchCore = m, e.geosearchCore = a, e.ArcgisOnlineProvider = y, e.arcgisOnlineProvider = l, e.FeatureLayerProvider = b, e.featureLayerProvider = h, e.MapServiceProvider = S, e.mapServiceProvider = d, e.GeocodeServiceProvider = C, e.geocodeServiceProvider = c, e.WorldGeocodingServiceUrl = g, Object.defineProperty(e, "__esModule", { value: !0 }) });
+//# sourceMappingURL=esri-leaflet-geocoder.js.map
+</script>
+
+<script>
+    var lat, lng, intitZoom;
+     
+    lat = 56.155403;
+    lng = 11.6172225;
+    initZoom = 6;
+        
+    var mapElem = document.getElementById('map_canvas');
+    var map = L.map('map_canvas',
+        {
+            minZoom: 2,
+            maxZoom: 15,
+            fullscreenControl: true,
+            maxBounds:L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180)),
+            maxBoundsViscosity: 1.0
+        });
+    map.setView([lat, lng], initZoom);
+    var elev = document.getElementById('elev').value;
+   
+    //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //    attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+    //}).addTo(map);
+    
+    var layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    var layerLabels;
+
+    document
+        .querySelector('#basemaps')
+        .addEventListener('change', function (e) {
+            //$('#myModal').modal();
+            //e.target.value = 'OpenStreetMap';
+            
+            var basemap = e.target.value;
+            setBasemap(basemap);
+            
+        });
+
+    
+
+    var isColorFloodMap;
+    var fmTileUrl = '/getFMTile.ashx?x={x}&y={y}&z={z}&e=';
+    var floodLayer = L.tileLayer(fmTileUrl + elev, {
+        attribution: '© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.mapzen.com/rights">Mapzen</a>, <a href = "https://www.mapzen.com/rights/#services-and-data-sources">Others</a>',
+        opacity: 0.5
+    })
+    var searchControl = L.esri.Geocoding.geosearch({ useMapBounds: 20, expanded:true }).addTo(map);
+
+    var resultsL = L.layerGroup().addTo(map);
+    var marker;
+    searchControl.on('results', function (data) {
+        /*
+        results.clearLayers();
+        for (var i = data.results.length - 1; i >= 0; i--) {
+            ga('send', 'event', 'Location', 'locsearch');
+            addMarker(data.results[i].latlng);
+        }
+        */
+        data = null;
+        $('#myModal').modal();
+    });
+
+
+
+    function addMarker(point) {
+        if (marker != undefined) {
+            map.removeLayer(marker);
+        };
+        point = L.latLng(Math.round(point.lat * 1000000) / 1000000, Math.round(point.lng * 1000000) / 1000000);
+        marker = L.marker(point);
+        resultsL.addLayer(marker);
+        var popup = L.popup();
+        popup.setContent('<b>Please Wait!</b><br>Getting Elevation Information...');
+        marker.bindPopup(popup);
+        marker.openPopup();
+        getElevation(popup, point);
+    }
+
+    // `fullscreenchange` Event that's fired when entering or exiting fullscreen.
+    map.on('fullscreenchange', function () {
+        
+        if (map.isFullscreen()) {
+            map.toggleFullscreen();
+            $('#myModal').modal();
+        }
+    });
+
+    
+    function getElevation(popup, point) {
+        vZoom = map.getZoom();
+        $.getJSON('/pro/elevationmap/getelevation.ashx?lat=' + point.lat + '&lon=' + point.lng + '&zoom=' + vZoom, function (data) {
+            var popupHtml = "<b>Latitude: " + point.lat + "<br>Longitude: " + point.lng + "</b><br>" + "<p id='elevContent' style='padding-bottom:0px;'>" + getElevContent(data.value) + "</p>";
+            popElev = data.value;
+            ga('send', 'event', 'Elevation', 'elevfound');
+            popupHtml = popupHtml + "<br><br><a style='font-size:1.2em;' target='_blank' href = '/3DFloodMap/' >👉 <b>View in 3D</b></a >";
+            popup.setContent(popupHtml);
+        });
+      }
+
+    map.on("click", function (e) {
+        ga('send', 'event', 'Location', 'locclick');
+        addMarker(e.latlng);
+    })
+
+    map.on("zoom", function (e) {
+        updateLink();
+    })
+
+    map.on("move", function (e) {
+        updateLink();
+    })
+
+    
+    //codeLatLng(marker.getPosition(), true);
+    setElev(elev,false);
+        
+        
+
+    function setElev(elevS, event=true) {
+        if (isNaN(elevS)) {
+            alert("Please enter only numeric value!");
+            return;
+        }
+        elevS = Math.round(elevS);
+        document.getElementById("elev").value = elevS;
+        elev = elevS;
+        updateLink();
+        //infowindow.close();
+        refresh();
+        if (event)
+            ga('send', 'event', 'Elevation', 'setelev');
+    }
+
+    function refresh() {
+        //map.overlayMapTypes.setAt(0, floodMapType);
+        document.getElementById("curElev").innerHTML = elev;
+        if (isColorFloodMap)
+            AddColorFloodMap();
+        else
+            floodLayer.setUrl(fmTileUrl + elev);
+    }
+
+    function getElevContent(elevValue) {
+        var elevContent = "";
+        resultElevation = Math.round(elevValue);
+        if (!isElevMap) {
+            if (elev > elevValue)
+                elevContent = elevContent + "<span style='color:red'><b>Probable Water Level:" + Math.round(elev - elevValue) + " meters.</b></span>";
+            else if (elevValue - elev <= 5)
+                elevContent = elevContent + "<span style='color:orange'><b>Above Water Level:" + Math.round(elevValue - elev) + " meters.</b></span>";
+            else if (elevValue - elev > 5)
+                elevContent = elevContent + "<span style='color:green'><b>Above Water Level:" + Math.round(elevValue - elev) + " meters.</b></span>";
+            }
+
+            elevContent = elevContent + "<br><b>Elevation: <span style='font-size:1.2em;'><span class='badge' style='background-color:#337ab7;'>" + Math.round(elevValue) + "</span></span> meters</b>";
+            if (!isElevMap) {
+                //elevContent = elevContent + " + <b><input id='addElev' type='text' value='0' style='width:20px' /></b > <br><input type='button' onclick='$(\"#myModal\").modal()' value='Set Water Level' /><br />";
+                elevContent = elevContent + " + <b><input id='addElev' type='text' value='0' style='width:20px' /></b > <br><input type='button' onclick='setElev(" + Math.round(elevValue) + " + parseInt(document.getElementById(\"addElev\").value),true)' value='Set Water Level' /><br />";
+            }
+            return elevContent;
+    }
+
+    function getElevContentOld(elevValue) {
+        var elevContent = "";
+        resultElevation = Math.round(elevValue);
+        if (elev > elevValue)
+            elevContent = elevContent + "<span style='color:red'><b>Probable Water Level:" + Math.round(elev - elevValue) + " meters.</b></span>";
+        else if (elevValue - elev <= 5)
+            elevContent = elevContent + "<span style='color:orange'><b>Above Water Level:" + Math.round(elevValue - elev) + " meters.</b></span>";
+        else if (elevValue - elev > 5)
+            elevContent = elevContent + "<span style='color:green'><b>Above Water Level:" + Math.round(elevValue - elev) + " meters.</b></span>";
+
+        elevContent = elevContent + "<br><b>Elevation: <span style='font-size:1.2em;'>" + Math.round(elevValue) + "</span> meters + <input id='addElev' type='text' value='0' style='width:20px'/></b><br><input type='button' onclick='$(\"#myModal\").modal()' value='Set Water Level'/><br/>";
+        return elevContent;
+    }
+
+    function updateLink() {
+        center = map.getCenter();
+        var lngUrl = "";
+        
+        document.getElementById("link").value = "https://www.floodmap.net/" + lngUrl + "?ll=" + Math.round(center.lat * 1000000) / 1000000 + "," + Math.round(center.lng * 1000000) / 1000000 + "&z=" + map.getZoom() + "&e=" + elev;
+        }
+
+    function setBasemap(basemap) {
+        if (basemap === 'OpenStreetMap') {
+            if (layer) {
+                map.removeLayer(layer);
+            }
+            layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            if (!isColorFloodMap)
+                floodLayer.bringToFront();
+        }
+        else if (basemap === 'OpenTopoMap') {
+            if (layer) {
+                map.removeLayer(layer);
+            }
+            layer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                attribution: ' SRTM | Base Map: © <a href="http://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+            }).addTo(map);
+            if (!isColorFloodMap)
+                floodLayer.bringToFront();
+
+        }
+        else {
+            $('#myModal').modal();
+        }
+        
+    }
+
+    
+
+    //Color FloodMap
+
+    var colFloodMap;
+    var isElevMap;
+    var isSea = "false";
+    var oldColMapLayers = new Array();
+    var isShowMap = true;
+    var colorMapTimeout;
+    var colorpal = "blue";
+
+    
+        switchToFloodMap();
+    
+    
+
+    $('input[type=radio][name=floodmap]').change(function () {
+        if (this.value == 'floodmap') {
+            $('#previewbox').hide();
+            $('#setElev').show();
+            $('#clickOnLabel').html('<b><span style="color: orange; ">Click on the Map</span> to get/set the flood water level at the location.</b>');
+            isElevMap = false
+            switchToFloodMap();
+        }
+        else if (this.value == 'colfloodmap') {
+            ga('send', 'event', 'Pro', 'colFMRadio');
+            $('#previewbox').show();
+            $('#setElev').show();
+            $('#clickOnLabel').html('<b><span style="color: orange; ">Click on the Map</span> to get/set the flood water level at the location.</b>');
+            isElevMap = false
+            switchToColorFloodMap();
+        }
+        else if (this.value == 'colelevmap') {
+            ga('send', 'event', 'Pro', 'colElevRadio');
+            $('#previewbox').show();
+            $('#setElev').hide();
+            $('#clickOnLabel').html('<b><span style="color: orange; ">Click on the Map</span> to get the Elevation at the location.</b>');
+            isElevMap = true
+            switchToColorFloodMap();
+        }
+    });
+    function switchToFloodMap() {
+        $('#colOpt').hide();
+        isColorFloodMap = false;
+        map.options.maxZoom = 22;
+        colorpal = "blue";
+        //$('#mapPanel').removeClass("col-md-9").addClass("col-md-12");
+        //$('#colPanel').hide();
+        //map.invalidateSize();
+        if (map.hasLayer(colorWait)) {
+            map.removeLayer(colorWait);
+        }
+        floodLayer.setUrl(fmTileUrl + elev);
+        map.addLayer(floodLayer);
+        try {
+            var arrayLength = oldColMapLayers.length;
+
+            for (var i = 0; i < arrayLength; i++) {
+                if (map.hasLayer(oldColMapLayers[i])) {
+                    map.removeLayer(oldColMapLayers[i]);
+                }
+                oldColMapLayers = [];
+            }
+        } catch (e) { }
+    }
+    function switchToColorFloodMap() {
+        isColorFloodMap = true;
+        if (map.getZoom() > 15)
+            map.setZoom(15);
+        map.options.maxZoom = 15;
+        //$('#mapPanel').removeClass("col-md-12").addClass("col-md-9");
+        //$('#colPanel').show();
+        //map.invalidateSize()
+        if (elev <= -1 && !isElevMap) {
+            $('#seaChk').prop('checked', true);
+            isSea = "true";
+        }
+        colorpal = $('input[name="colorpal"]:checked').val();
+        AddColorFloodMap();
+        if (map.hasLayer(floodLayer))
+            map.removeLayer(floodLayer);
+        $('#colOpt').show();
+    }
+    $('#seaChk').change(function () {
+        if (this.checked)
+            isSea = "true";
+        else
+            isSea = "false";
+        switchToColorFloodMap();
+    });
+    $('input[type=radio][name=colorpal]').change(function () {
+        colorpal = this.value;
+        switchToColorFloodMap();
+    });
+    var waitIcon = L.icon({
+        iconUrl: '/img/colorwait.gif',
+        iconSize: [40, 40], // size of the icon
+        iconAnchor: [20, 20], // point of the icon which will correspond to marker's location
+    });
+    var colorWait = new L.marker(map.getCenter(), { icon: waitIcon, clickable: false });
+    map.on('move', function (e) {
+        colorWait.setLatLng(map.getCenter());
+    });
+    var colorwaitTimeout, retryTimeout;
+    function AddColorFloodMap() {
+        if (colorMapTimeout)
+            clearTimeout(colorMapTimeout);
+        if (isShowMap) {
+            isShowMap = false;
+            var cen = map.getCenter();
+            var zm = map.getZoom();
+            var rect = mapElem.getBoundingClientRect();
+            var imgBounds = map.getBounds();
+            if (!isElevMap)
+                colFloodMap = new L.ImageOverlay('/pro/floodmapresult/GetFloodMap.ashx?lat=' + cen.lat + '&lon=' + cen.lng + '&zoom=' + zm + '&width=' + rect.width + '&height=' + rect.height + '&p=1&colorpal=' + colorpal + '&sea=' + isSea + '&slippy=true&floodelv=' + elev, imgBounds);
+            else
+                colFloodMap = new L.ImageOverlay('/pro/elevationmap/getMap.ashx?lat=' + cen.lat + '&lon=' + cen.lng + '&zoom=' + zm + '&width=' + rect.width + '&height=' + rect.height + '&p=1&colorpal=' + colorpal + '&sea=' + isSea + '&slippy=true', imgBounds);
+            retryTimeout = setTimeout(function () {
+                if (colorwaitTimeout)
+                    clearTimeout(colorwaitTimeout);
+                if (map.hasLayer(colorWait)) {
+                    map.removeLayer(colorWait);
+                }
+
+                try {
+                    var arrayLength = oldColMapLayers.length;
+
+                    for (var i = 0; i < arrayLength; i++) {
+                        if (map.hasLayer(oldColMapLayers[i])) {
+                            map.removeLayer(oldColMapLayers[i]);
+                        }
+                        oldColMapLayers = [];
+                    }
+                } catch (e) { }
+                oldColMapLayers.push(colFloodMap);
+                isShowMap = true;
+                if (!isColorFloodMap) {
+                    switchToFloodMap();
+                    return;
+                }
+                AddColorFloodMap();
+            }, 10000);
+            colFloodMap.on('load', function colorMapLoad() {
+                if (retryTimeout)
+                    clearTimeout(retryTimeout);
+                if (colorwaitTimeout)
+                    clearTimeout(colorwaitTimeout);
+                if (map.hasLayer(colorWait)) {
+                    map.removeLayer(colorWait);
+                }
+                try {
+                    var arrayLength = oldColMapLayers.length;
+
+                    for (var i = 0; i < arrayLength; i++) {
+                        if (map.hasLayer(oldColMapLayers[i])) {
+                            map.removeLayer(oldColMapLayers[i]);
+                        }
+                        oldColMapLayers = [];
+                    }
+                } catch (e) { }
+                oldColMapLayers.push(colFloodMap);
+                isShowMap = true;
+                if (!isColorFloodMap) {
+                    switchToFloodMap();
+                    return;
+                }
+                var newCen = map.getCenter();
+                if (!(cen.lat == newCen.lat && cen.lng == newCen.lng && zm == map.getZoom()))
+                    AddColorFloodMap();
+            });
+            colFloodMap.on('error', function () {
+                if (retryTimeout)
+                    clearTimeout(retryTimeout);
+                if (colorwaitTimeout)
+                    clearTimeout(colorwaitTimeout);
+                if (map.hasLayer(colorWait)) {
+                    map.removeLayer(colorWait);
+                }
+
+                try {
+                    var arrayLength = oldColMapLayers.length;
+
+                    for (var i = 0; i < arrayLength; i++) {
+                        if (map.hasLayer(oldColMapLayers[i])) {
+                            map.removeLayer(oldColMapLayers[i]);
+                        }
+                        oldColMapLayers = [];
+                    }
+                } catch (e) { }
+                oldColMapLayers.push(colFloodMap);
+                isShowMap = true;
+                if (!isColorFloodMap) {
+                    switchToFloodMap();
+                    return;
+                }
+                AddColorFloodMap();
+            });
+            colFloodMap.addTo(map);
+            colorwaitTimeout = setTimeout(function () { colorWait.addTo(map); }, 1500);
+
+
+
+        }
+    }
+
+
+    var showImage = true;
+    var zoomstart = false;
+
+    map.on('zoomend', function () {
+        if (isColorFloodMap) {
+            if (colorMapTimeout)
+                clearTimeout(colorMapTimeout);
+            colorMapTimeout = setTimeout(function () {
+                AddColorFloodMap();
+            }, 1000);
+        }
+    });
+    map.on("moveend", function (e) {
+        if (isColorFloodMap) {
+            if (colorMapTimeout)
+                clearTimeout(colorMapTimeout);
+            AddColorFloodMap();
+        }
+    })
+
+
+</script>
+</script>
+
+    <script type="application/javascript" src="https://sdki.truepush.com/sdk/v2.0.2/app.js" async></script>
+<script>
+    var truepush = window.truepush || [];
+    truepush.push(function () {
+        truepush.Init({
+            id: "5f1a712a8cf1e2671f4d75f7"
+        }, function (error) {
+            if (error) console.error(error);
+        })
+    })
+</script>
+        <!-- Check member address update --> 
+    <div class="modal fade" id="modalNoAddress" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog"  style="margin-bottom:60px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" >⚠️ Update Your Billing Address Now</h4>
+      </div>
+      <div class="modal-body" style="font-size:1.2em;color:#337ab7;">
+<div class="panel panel-primary" style="font-size:1.2em;border-width:4px;border-color:crimson;">
+                <div class="panel-body">
+                    <ul style="color:black;">
+                    <li>Our payment provider needs your Billing Address to process your Card Payment at the end of your 7 days trial.</li> 
+                    <li>Otherwise your payment will fail and you will not be able to access FloodMap Pro after your trial ends.</li>
+                    </ul>
+                        👉 <a style="text-decoration:underline;" href="https://members.floodmap.net/member/account/edit">Click here to update your Billing Address now</a>
+                    </div>   
+                    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+       </div>
+    </div>
+  </div>
+</div>
+    <div class="modal fade" id="modalNoAddressCardFail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog"  style="margin-bottom:60px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">⚠️ Update Your Billing Address Now</h4>
+      </div>
+      <div class="modal-body" style="font-size:1.2em;color:#337ab7;">
+<div class="panel panel-primary" style="font-size:1.2em;border-width:4px;border-color:crimson;">
+                <div class="panel-body">
+                    <ul style="color:black;">
+                        <li>Your Card payment failed due to Billing Address unavailability.</li>
+                        <li>Our payment provider needs your Billing Address to retry your Card Payment.</li>
+                        <li>Otherwise you will not be able to access FloodMap Pro.</li>
+                    </ul>
+                        👉 <a href="https://members.floodmap.net/member/account/edit">Click here to update your Billing Address now</a>
+                    </div>   
+                    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+       </div>
+    </div>
+  </div>
+</div>
+    <!-- Elevation Map Generator Promo -->
+    <div class="modal fade" id="myModalEMG" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="margin-bottom:60px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Elevation Map Generator</h4>
+      </div>
+      <div class="modal-body" style="font-size:1em;color:#337ab7;">
+          <h3><b>Elevation Map Generator</b></h3>
+<div class="panel panel-primary" style="font-size:1.2em;border-width:4px;border-color:crimson;">
+                <div class="panel-body" style="color:black;">
+                <span style="font-size:1.2em; color:crimson;text-align:center;" ><b>FloodMap Pro</b></span><br />
+                        <span style="font-size:1.2em;text-align:center;color:black;"><b>Only $9/mo </b></span><br />
+                        Now FloodMap Pro has <span style="font-size:1.2em; color:crimson;text-align:center;" ><b>Elevation Map Generator</b></span>
+                    <br />👉 Select Location, Zoom and Map Size<br>
+                    👉 Higher Resolution and Large Size<br>
+                    <img class="img-responsive" src="/img/elevmapad.png"><br>
+                    <a style="text-align:center;" href="https://members.floodmap.net/member/plans/f54d573b7e" class="btn btn-success btn-lg active" role="button" aria-pressed="true"><b>Start your 7 day trial</b></a><br />
+                    <span>💡 Your card will be charged after your 7 days trial ends. But if you cancel the plan before your 7 days trial ends, your card will not be charged.</span><br />
+                    </div>   
+                    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+       </div>
+    </div>
+  </div>
+</div>
+
+    <!-- Elevation Map Generator Promo -->
+    <div class="modal fade" id="myModalFMG" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="margin-bottom:60px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Generate Color Flood Map</h4>
+      </div>
+      <div class="modal-body" style="font-size:1em;color:#337ab7;">
+          <h3><b>Generate Color Flood Map</b></h3>
+<div class="panel panel-primary" style="font-size:1.2em;border-width:4px;border-color:crimson;">
+                <div class="panel-body" style="color:black;">
+                <span style="font-size:1.2em; color:crimson;text-align:center;" ><b>FloodMap Pro</b></span><br />
+                        <span style="font-size:1.2em;text-align:center;color:black;"><b>Only $9/mo </b></span><br />
+                         <span style="font-size:1.2em; color:crimson;text-align:center;" ><b>Now Generate Color Coded Flood Map</b></span>
+                    <br />👉 Select Color Palette and Map Size<br>
+                    👉 Color Coded Depth Analysis Map<br>
+                    <img class="img-responsive" src="/img/fmgad.png"><br>
+                    <a style="text-align:center;" href="https://members.floodmap.net/member/plans/f54d573b7e" class="btn btn-success btn-lg active" role="button" aria-pressed="true">Start your 7 day trial</a><br />
+                    <span>💡 Your card will be charged after your 7 days trial ends. But if you cancel the plan before your 7 days trial ends, your card will not be charged.</span><br />
+                    </div>   
+                    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+       </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
