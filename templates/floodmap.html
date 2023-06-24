@@ -502,7 +502,7 @@
     
 
     var isColorFloodMap;
-    var fmTileUrl = '/getFMTile.ashx?x={x}&y={y}&z={z}&e=';
+    var fmTileUrl = 'https://www.floodmap.net/getFMTile.ashx?x={x}&y={y}&z={z}&e=';
     var floodLayer = L.tileLayer(fmTileUrl + elev, {
         attribution: '© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.mapzen.com/rights">Mapzen</a>, <a href = "https://www.mapzen.com/rights/#services-and-data-sources">Others</a>',
         opacity: 0.5
@@ -551,7 +551,7 @@
     
     function getElevation(popup, point) {
         vZoom = map.getZoom();
-        $.getJSON('/pro/elevationmap/getelevation.ashx?lat=' + point.lat + '&lon=' + point.lng + '&zoom=' + vZoom, function (data) {
+        $.getJSON('https://www.floodmap.net/pro/elevationmap/getelevation.ashx?lat=' + point.lat + '&lon=' + point.lng + '&zoom=' + vZoom, function (data) {
             var popupHtml = "<b>Latitude: " + point.lat + "<br>Longitude: " + point.lng + "</b><br>" + "<p id='elevContent' style='padding-bottom:0px;'>" + getElevContent(data.value) + "</p>";
             popElev = data.value;
             ga('send', 'event', 'Elevation', 'elevfound');

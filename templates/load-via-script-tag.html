@@ -22,15 +22,29 @@
       // initalize leaflet map
       var map = L.map('map').setView([0, 0], 5);
 
-      // add OpenStreetMap basemap
-      // L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-      //     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      // }).addTo(map);
+      var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '© OpenStreetMap'
+      });
 
-      // add opentopmap basemap
-      L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="http://opentopomap.org/">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
-      }).addTo(map);
+      var osmHOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team hosted by OpenStreetMap France'
+      });
+
+      var opentopomap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                attribution: ' SRTM | Base Map: © <a href="http://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+      });
+
+      var baseMaps = {
+          "OpenStreetMap": osm,
+          "OpenStreetMap.HOT": osmHOT,
+          "OpenTopoMap": opentopomap
+      };
+
+      opentopomap.addTo(map);
+
+      var layerControl = L.control.layers(baseMaps).addTo(map);
 
       var url_to_geotiff_file = "https://geotiff.github.io/georaster-layer-for-leaflet-example/example_4326.tif";
 
