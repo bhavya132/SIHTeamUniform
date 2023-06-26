@@ -277,9 +277,12 @@
  </div>
         <div id="basemaps-wrapper" class="leaflet-bar">
         <select id="basemaps" >
-            
-    <option value="OpenStreetMap">OpenStreetMap</option>
-    <option value="OpenTopoMap">OpenTopoMap</option>
+    
+    
+    <!-- <option value="OpenStreetMap">OpenStreetMap</option>
+    <option value="OpenTopoMap">OpenTopoMap</option> -->
+    <!-- <option value="Population Density (2020)"></option>
+    <option value="Global Projected Population (2050)"></option> -->
     <!-- <option value="Topographic">Topographic</option>
     <option value="Imagery">Imagery</option>
     <option value="ImageryClarity">Imagery (Clarity)</option>
@@ -508,6 +511,58 @@
 </script>
 
 <script>
+    // SSP GPP
+    String.prototype.format = function () {
+        var i = 0, args = arguments;
+        return this.replace(/{}/g, function () {
+            return typeof args[i] != 'undefined' ? args[i++] : '';
+        });
+    };
+
+    var ssp_gpp = {};
+    var uri_base = 'https://sedac.ciesin.columbia.edu/geoserver/ows?service=WMS&request=GetLegendGraphic&format=image/png&width=20&height=20&layer=';
+    
+    for (var i = 1; i <= 5; i++) {
+        var ssp_type = 'ssp{}'.format(i);
+        var wms_name_2050 = 'popdynamics:popdynamics-pop-projection-ssp-2010-2100_{}-2050-total-population'.format(ssp_type)
+        var wms_name_2100 = 'popdynamics:popdynamics-pop-projection-ssp-2010-2100_{}-2100-total-population'.format(ssp_type)
+        ssp_gpp[ssp_type] = {"2050": {'name':wms_name_2050,'uri':uri_base+wms_name_2050+'&'},
+                            "2100": {'name':wms_name_2100,'uri':uri_base+wms_name_2100+'&'}};
+    }
+    console.log(ssp_gpp);
+
+    (function() {
+        var elm = document.getElementById('basemaps'),
+            df = document.createDocumentFragment();
+            
+        var option = document.createElement('option');
+        option.value = 'OpenStreetMap';
+        option.appendChild(document.createTextNode('OpenStreetMap'));
+        df.appendChild(option);
+        
+        var option = document.createElement('option');
+        option.value = 'OpenTopoMap';
+        option.appendChild(document.createTextNode("OpenTopoMap"));
+        df.appendChild(option);
+            
+        for (var i = 1; i <= 5; i++) {
+            
+            var option = document.createElement('option');
+            var ssp_type = 'ssp{} ({})'.format(i,2050);
+            option.value = ssp_type;
+            option.appendChild(document.createTextNode(ssp_type));
+            df.appendChild(option);
+
+            var option = document.createElement('option');
+            var ssp_type = 'ssp{} ({})'.format(i,2100);
+            option.value = ssp_type;
+            option.appendChild(document.createTextNode(ssp_type));
+            df.appendChild(option);
+            
+        }
+        elm.appendChild(df);
+    }());
+
     var lat, lng, intitZoom;
     
     lat = 20;
@@ -710,6 +765,7 @@
                 floodLayer.bringToFront();
 
         }
+
         // else {
         //     $('#myModal').modal();
         // }
