@@ -22,6 +22,10 @@ def hello_there(name = None):
 def test_georaster():
     return render_template("load-via-script-tag.html")
 
+@app.route("/my_map")
+def my_map():
+    return render_template("my_map.html")
+
 @app.route("/floodmap")
 def test_floodmap():
     return render_template("floodmap.html")
@@ -44,6 +48,10 @@ def test_mumbaipopn():
     df_cropped = df.loc[:,['Ward_Alphabet','Ward_Names','TOT_P_DEN']].set_index(['Ward_Alphabet'])
     mumbai_dict = df_cropped.to_dict('index')
     return render_template("mumbaipopn.html",mumbai_dict=mumbai_dict)
+
+@app.route("/wms_test")
+def wms_test():
+    return render_template("wms_test.html")
 
 if __name__ == "__main__":
     app.run()
