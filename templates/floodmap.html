@@ -19,6 +19,7 @@
 
 <!-- Load Leaflet from CDN -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<!-- <link rel="stylesheet" href="https://maps.kartoza.com/css/leaflet.wmslegend.css"> -->
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     
      <!-- Load Esri Leaflet from CDN -->
@@ -41,6 +42,7 @@
 <!-- <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script> -->
 <!--Leaflet Foolscreen -->
 <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+<!-- <script src="https://maps.kartoza.com/js/leaflet.wmslegend.js"></script> -->
 <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
 <!-- favicon -->
 <link rel="icon" type="image/png" href="/favicon.png">
@@ -59,29 +61,37 @@
     <![endif]-->
 <style id="antiClickjack">body{display:none !important;}</style><script type="text/javascript">if (self === top){ var antiClickjack = document.getElementById("antiClickjack"); antiClickjack.parentNode.removeChild(antiClickjack); } else { top.location = self.location; } </script>
 <style>
-.footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  font-size:1.2em;
-  background-color: white;
-  text-align: center;
-  color: #337ab7;
-  padding:10px 10px 10px 10px;
-  /* border-top:solid 3px #337ab7; */
-}
+    .footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    font-size:1.2em;
+    background-color: white;
+    text-align: center;
+    color: #337ab7;
+    padding:10px 10px 10px 10px;
+    /* border-top:solid 3px #337ab7; */
+    }
 </style>
 <style>
     .leaflet-tile-container img {
     box-shadow: 0 0 1px rgba(0, 0, 0, 0.05);
-}
+    }
+    .rowlegend {
+    display: flex;
+    }
+
+    .column {
+    flex: 50%;
+    }
+
   #basemaps-wrapper {
     position: absolute;
     top: 10px;
     right: 10px;
     z-index: 400;
-    background: white;
+    background: rgba(255, 255, 255, 0.521);
     padding: 10px;
   }
   #basemaps {
@@ -92,7 +102,7 @@
     top: 30%;
     right: 30%;
     z-index: 400;
-    background: white;
+    background: rgba(255, 255, 255, 0.514);
     padding: 10px;
   }
 </style>
@@ -343,6 +353,19 @@
       </div>
           </div>
       </div>
+
+      <div class="rowlegend">
+        <div class="column">
+            <h3 class="panel-title"><b>Legend</b></h3>
+            <img src="colorbar.png" id="legend">
+        </div>
+        <div class="column">
+            <h4 class="panel-title"><b>Description</b></h4>
+            <p id="legend_desc">OpenStreetMap - geospatial data which features roads and street data</p>
+        </div>
+        
+      </div>
+
  <div class="row">
      <div class="col-md-12">
                 <div class="panel panel-primary">
@@ -365,7 +388,7 @@
             <li>By setting negative elevation, Bathymetry study is also possible.</li>
 	        </ul> -->
             <p>The elevation layered on the map is in meters and is from sea level. The elevation is zero for the sea level. Negative elevation means depth below sea level.</p>
-            <p>Data Sources: <a href="https://www.mapzen.com/">Mazpzen</a>, <a title="The National Map" href="https://www.usgs.gov/core-science-systems/national-geospatial-program/national-map">TNM</a>, <a href="https://www.usgs.gov/centers/eros/science/usgs-eros-archive-digital-elevation-shuttle-radar-topography-mission-srtm-1-arc?qt-science_center_objects=0#qt-science_center_objects">SRTM</a>, <a href="https://www.usgs.gov/land-resources/eros/coastal-changes-and-impacts">GMTED</a>, <a href="https://www.ngdc.noaa.gov/mgg/global/global.html">ETOPO1</a>, <a href="https://floodmap.net">floodmap.net</a></p>
+            <p>Data Sources: <a href="https://www.mapzen.com/">Mazpzen</a>, <a title="The National Map" href="https://www.usgs.gov/core-science-systems/national-geospatial-program/national-map">TNM</a>, <a href="https://www.usgs.gov/centers/eros/science/usgs-eros-archive-digital-elevation-shuttle-radar-topography-mission-srtm-1-arc?qt-science_center_objects=0#qt-science_center_objects">SRTM</a>, <a href="https://www.usgs.gov/land-resources/eros/coastal-changes-and-impacts">GMTED</a>, <a href="https://www.ngdc.noaa.gov/mgg/global/global.html">ETOPO1</a>, <a href="https://floodmap.net">floodmap.net</a>, <a href = "https://sedac.ciesin.columbia.edu/">SEDAC</a>, <a href = "https://doi.org/10.1029/2022GL098477">Wu et al (2022)</a></p>
             <!-- <p><b>Notes:</b>Before using this Flood Map application, please note that for various technical or non technical reasons the application is not guaranteed free of bugs or inaccuracies.
             </p> -->
         </div>
@@ -548,14 +571,17 @@
         for (var i = 1; i <= 5; i++) {
             
             var option = document.createElement('option');
-            var ssp_type = 'ssp{} ({})'.format(i,2050);
+            var ssp_type = 'ssp{}_{}'.format(i,2050);
             option.value = ssp_type;
+            // option.value = ssp_gpp['ssp{}'.format(i)][2050];
+            // console.log(ssp_gpp['ssp{}'.format(i)][2050]);
             option.appendChild(document.createTextNode(ssp_type));
             df.appendChild(option);
 
             var option = document.createElement('option');
-            var ssp_type = 'ssp{} ({})'.format(i,2100);
+            var ssp_type = 'ssp{}_{}'.format(i,2100);
             option.value = ssp_type;
+            // option.value = ssp_gpp['ssp{}'.format(i)][2100];
             option.appendChild(document.createTextNode(ssp_type));
             df.appendChild(option);
             
@@ -580,10 +606,87 @@
         });
     map.setView([lat, lng], initZoom);
     var elev = document.getElementById('elev').value;
-   
+    
+    function onEachFeature(feature, layer) {
+        // does this feature have a property named popupContent?
+        if (feature.properties && feature.properties.popupContent) {
+            var lon = parseFloat(feature.geometry.coordinates[0]).toFixed(3);
+            var lat = parseFloat(feature.geometry.coordinates[1]).toFixed(3);
+            console.log(lat,lon);
+            layer.bindPopup(feature.properties.popupContent + "\nlat: {}, lon: {}".format(lat,lon));
+            // layer.bindPopup(feature.properties.popupContent + '\n' + feature.geometry.coordinates);
+        }
+    }
     //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     //    attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
     //}).addTo(map);
+    var states = [{
+            "type": "Feature",
+            "properties": {"party": "Republican"},
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[
+                    [-104.05, 48.99],
+                    [-97.22,  48.98],
+                    [-96.58,  45.94],
+                    [-104.03, 45.94],
+                    [-104.05, 48.99]
+                ]]
+            }
+        }, {
+            "type": "Feature",
+            "properties": {"party": "Democrat"},
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[
+                    [-109.05, 41.00],
+                    [-102.06, 40.99],
+                    [-102.03, 36.99],
+                    [-109.04, 36.99],
+                    [-109.05, 41.00]
+                ]]
+            }
+        }];
+
+        L.geoJSON(states, {
+            style: function(feature) {
+                switch (feature.properties.party) {
+                    case 'Republican': return {color: "#ff0000"};
+                    case 'Democrat':   return {color: "#0000ff"};
+                }
+            }
+        }).addTo(map);
+    
+    
+
+    const baseballIcon = L.icon({
+      iconUrl: "{{db_result['img']}}", //'https://media.geeksforgeeks.org/wp-content/uploads/geeksforgeeks-13.png',
+      iconSize: [32, 37],
+      iconAnchor: [16, 37],
+      popupAnchor: [0, -28]
+    });
+
+    var geojsonFeature = {
+        "type": "Feature",
+        "properties": {
+            "name": "Coors Field",
+            "amenity": "Baseball Stadium",
+            "popupContent":"<b>Flood:</b> " + "{{db_result['flood']}}" //"This is where the Rockies play!"
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": ["{{db_result['lon']}}","{{db_result['lat']}}"]//[-104.99404, 39.75621]
+        }
+    };
+
+    const coorsLayer = L.geoJSON(geojsonFeature, {
+
+      pointToLayer(feature, latlng) {
+        return L.marker(latlng, {icon: baseballIcon});
+      },
+
+      onEachFeature
+    }).addTo(map);
     
     var layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
     var layerLabels;
@@ -596,15 +699,30 @@
             
             var basemap = e.target.value;
             setBasemap(basemap);
-            
+            updateLegend(basemap);
         });
-
     
+    // add legend
+    var legend = L.control({position: 'bottomright'});
+
+    legend.onAdd = function (map,image_list) {
+
+        var div = L.DomUtil.create('div', 'info legend');
+
+        // loop through our density intervals and generate a label with a colored square for each interval
+        for (var i = 0; i < image_list.length; i++) {
+            div.innerHTML +=
+            // popn_density_legend[i] + (" <img src="+ image_list[i] +" height='50' width='100'>") +'<br>';
+            (" <img src="+ image_list[i] +" >") +'<br>';
+        }
+
+        return div;
+    };
 
     var isColorFloodMap;
     var fmTileUrl = 'https://www.floodmap.net/getFMTile.ashx?x={x}&y={y}&z={z}&e=';
     var floodLayer = L.tileLayer(fmTileUrl + elev, {
-        attribution: '© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.mapzen.com/rights">Mapzen</a>, <a href = "https://floodmap.net">Floodmap.net</a>',
+        attribution: '© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors,<a href="https://www.mapzen.com/rights">Mapzen</a>, <a href = "https://floodmap.net">Floodmap.net</a>, <a href = "https://sedac.ciesin.columbia.edu/">SEDAC</a>',
         opacity: 0.5
     })
     // var searchControl = L.esri.Geocoding.geosearch({ useMapBounds: 20, expanded:true }).addTo(map);
@@ -763,13 +881,85 @@
             }).addTo(map);
             if (!isColorFloodMap)
                 floodLayer.bringToFront();
-
+        
         }
+        else {
+            var geoserver = 'https://sedac.ciesin.columbia.edu/geoserver/wms';
+            var basemap_split = basemap.split("_");
+            var ssp_type = basemap_split[0];
+            var ssp_year = Number(basemap_split[1]);
+            // console.log(ssp_type);
+            console.log(ssp_gpp[ssp_type][ssp_year]['name']);
+            console.log(ssp_gpp[ssp_type][ssp_year]['uri']);
+            if (layer) {
+                map.removeLayer(layer);
+            }
+            layer = L.tileLayer.wms(geoserver, {
+                layers: ssp_gpp[ssp_type][ssp_year]['name'],
+                format: 'image/png',
+                transparent: true
+            }).addTo(map);
 
+            // add legend
+            var uri = ssp_gpp[ssp_type][ssp_year]['uri'];
+            // L.wmsLegend(uri,map);
+            // legend.addTo(map,[ssp_gpp[ssp_type][ssp_year]['uri']]);
+
+            if (!isColorFloodMap)
+                floodLayer.bringToFront();
+        }
         // else {
         //     $('#myModal').modal();
         // }
         
+    }
+
+    function sspDescription(ssp_type, ssp_year) {
+        var gpp = 'Global Population Prediction';
+
+        if (ssp_type === 'ssp1') {
+            var legend_desc = '{} for {} (year {}): Sustainability (Taking the Green Road)'.format(ssp_type.toUpperCase(), gpp, ssp_year);
+        }
+
+        else if (ssp_type === 'ssp2') {
+            var legend_desc = '{} for {} (year {}): Middle of the Road'.format(ssp_type.toUpperCase(), gpp, ssp_year);
+        }
+
+        else if (ssp_type === 'ssp3') {
+            var legend_desc = '{} for {} (year {}): Regional Rivalry (A Rocky Road)'.format(ssp_type.toUpperCase(), gpp, ssp_year);
+        }
+
+        else if (ssp_type === 'ssp4') {
+            var legend_desc = '{} for {} (year {}): Inequality (A Road divided)'.format(ssp_type.toUpperCase(), gpp, ssp_year);
+        }
+
+        else {
+            var legend_desc = '{} for {} (year {}): Fossil-fueled Development (Taking the Highway)'.format(ssp_type.toUpperCase(), gpp, ssp_year);
+        }
+
+        return legend_desc;
+    }
+
+    function updateLegend(basemap) {
+        var legend_img = document.getElementById('legend');
+        var legend_desc = document.getElementById('legend_desc');
+
+        if (basemap === 'OpenStreetMap') {
+            legend_img.src = null;
+        }
+
+        else if (basemap === 'OpenTopoMap') {
+            legend_img.src = null;
+            legend_desc.textContent = '{} is a free topographic map generated from OpenStreetMap data and SRTM elevation data. The map style is based on the official maps and focuses on good readability through high contrast and balanced signatures.'.format(basemap);
+        }
+
+        else {
+            var basemap_split = basemap.split("_");
+            var ssp_type = basemap_split[0];
+            var ssp_year = Number(basemap_split[1]);
+            legend_img.src = ssp_gpp[ssp_type][ssp_year]['uri'];
+            legend_desc.textContent = sspDescription(ssp_type, ssp_year);
+        }
     }
 
     
