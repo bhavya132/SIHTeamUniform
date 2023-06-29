@@ -40,6 +40,8 @@
 <meta name="twitter:image" content="https://www.floodmap.net/img/preview.png"> -->
 <!-- <link rel="image_src" href="/img/preview.png" /> -->
 <!-- <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script> -->
+<!--we need the topojson library as well-->
+<script src="https://unpkg.com/topojson@3.0.2/dist/topojson.min.js"></script>
 <!--Leaflet Foolscreen -->
 <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
 <!-- <script src="https://maps.kartoza.com/js/leaflet.wmslegend.js"></script> -->
@@ -620,43 +622,179 @@
     //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     //    attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
     //}).addTo(map);
-    var states = [{
-            "type": "Feature",
-            "properties": {"party": "Republican"},
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [[
-                    [-104.05, 48.99],
-                    [-97.22,  48.98],
-                    [-96.58,  45.94],
-                    [-104.03, 45.94],
-                    [-104.05, 48.99]
-                ]]
-            }
-        }, {
-            "type": "Feature",
-            "properties": {"party": "Democrat"},
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [[
-                    [-109.05, 41.00],
-                    [-102.06, 40.99],
-                    [-102.03, 36.99],
-                    [-109.04, 36.99],
-                    [-109.05, 41.00]
-                ]]
-            }
-        }];
+    // var states = [{
+    //         "type": "Feature",
+    //         "properties": {"party": "Republican"},
+    //         "geometry": {
+    //             "type": "Polygon",
+    //             "coordinates": [[
+    //                 [-104.05, 48.99],
+    //                 [-97.22,  48.98],
+    //                 [-96.58,  45.94],
+    //                 [-104.03, 45.94],
+    //                 [-104.05, 48.99]
+    //             ]]
+    //         }
+    //     }, {
+    //         "type": "Feature",
+    //         "properties": {"party": "Democrat"},
+    //         "geometry": {
+    //             "type": "Polygon",
+    //             "coordinates": [[
+    //                 [-109.05, 41.00],
+    //                 [-102.06, 40.99],
+    //                 [-102.03, 36.99],
+    //                 [-109.04, 36.99],
+    //                 [-109.05, 41.00]
+    //             ]]
+    //         }
+    //     }];
 
-        L.geoJSON(states, {
-            style: function(feature) {
-                switch (feature.properties.party) {
-                    case 'Republican': return {color: "#ff0000"};
-                    case 'Democrat':   return {color: "#0000ff"};
-                }
+    //     L.geoJSON(states, {
+    //         style: function(feature) {
+    //             switch (feature.properties.party) {
+    //                 case 'Republican': return {color: "#ff0000"};
+    //                 case 'Democrat':   return {color: "#0000ff"};
+    //             }
+    //         }
+    //     }).addTo(map);
+    // const info = L.control();
+
+    // info.onAdd = function (map) {
+    //     this._div = L.DomUtil.create('div', 'info');
+    //     this.update();
+    //     return this._div;
+    // };
+
+    // info.update = function (props) {
+    //     const contents = props ? `<b>${mumbai_dict[props.name].Ward_Names}</b><br />${mumbai_dict[props.name].TOT_P_DEN} people / km<sup>2</sup> (2011)` : 'Hover over a ward';
+    //     this._div.innerHTML = `<h4>Mumbai Population Density</h4>${contents}`;
+    // };
+
+    // info.addTo(map);
+    // add mumbai population density (2011)
+    var mumbai_dict = JSON.parse('{{mumbai_dict | tojson}}');
+    // get color depending on population density value
+    function getColor(d) {
+        return d > 90000 ? '#800026' :
+            d > 50000  ? '#BD0026' :
+            d > 40000  ? '#E31A1C' :
+            d > 30000  ? '#FC4E2A' :
+            d > 20000   ? '#FD8D3C' :
+            d > 10000   ? '#FEB24C' :
+            d > 5000   ? '#FED976' :
+                        '#FFEDA0';
+    };
+
+      //extend Leaflet to create a GeoJSON layer from a TopoJSON file
+      L.TopoJSON = L.GeoJSON.extend({
+        addData: function (data) {
+          var geojson, key;
+          if (data.type === "Topology") {
+            for (key in data.objects) {
+              if (data.objects.hasOwnProperty(key)) {
+                geojson = topojson.feature(data, data.objects[key]);
+                L.GeoJSON.prototype.addData.call(this, geojson);
+              }
             }
-        }).addTo(map);
+            return this;
+          }
+          L.GeoJSON.prototype.addData.call(this, data);
+          return this;
+        }
+      });
+
+      
+
+      L.topoJson = function (data, options) {
+        return new L.TopoJSON(data, options);
+      };
     
+    // mouseover events
+    // function highlightFeature(e) {
+	// 	const layer = e.target;
+
+	// 	layer.setStyle({
+	// 		weight: 5,
+	// 		color: '#666',
+	// 		dashArray: '',
+	// 		fillOpacity: 0.7
+	// 	});
+
+	// 	layer.bringToFront();
+
+	// 	info.update(layer.feature.properties);
+	// }
+
+    // function resetHighlight(e) {
+	// 	geojson.resetStyle(e.target);
+	// 	info.update();
+	// }
+
+	// function zoomToFeature(e) {
+	// 	map.fitBounds(e.target.getBounds());
+	// }
+
+      //create an empty geojson layer, 
+      //create a different style for each individual feature
+      //with a style and a popup on click
+      var geojson = L.topoJson(null, {
+        style: function(feature){
+          return {
+            color: "#000",
+            opacity: 1,
+            weight: 1,
+            //fillColor: getColor(feature.properties.density),
+            fillColor: getColor(mumbai_dict[feature.properties.name].TOT_P_DEN),
+            fillOpacity: 0.8
+          }
+        },
+        //The onEachFeature option is a function that gets called on each feature before adding it to a GeoJSON layer. 
+        //A common reason to use this option is to attach a popup to features when they are clicked.
+        onEachFeature: function(feature, layer) {
+            // layer.on({
+            //     mouseover: highlightFeature,
+            //     mouseout: resetHighlight,
+            //     click: zoomToFeature
+            // });
+          //layer.bindPopup('<p>'+feature.properties.name+'</p>')
+          layer.bindPopup('<p>'+mumbai_dict[feature.properties.name].Ward_Names+'</p>')
+        }
+      }).addTo(map); //TODO: ADD SET BOUNDS TO MAP FOR ZOOM IN, AND EVENT LISTENER
+      //fill: #317581;
+      //define a function to get and parse geojson from URL
+      async function getGeoData(url) {
+        let response = await fetch(url);
+        let data = await response.json();
+        console.log(data)
+        return data;
+      }
+      
+      //fetch the geojson and add it to our geojson layer
+      getGeoData('https://gist.githubusercontent.com/mickeykedia/9d9144072c5f637c26995569dd347614/raw/b65134846607235adf4ad6498713deed77d3b4b5/Mumbai_Topojson.topojson').then(data => geojson.addData(data));
+    
+    // add legend
+    // const legend = L.control({position: 'bottomright'});
+
+	// legend.onAdd = function (map) {
+
+	// 	const div = L.DomUtil.create('div', 'info legend');
+	// 	const grades = [0, 5000, 10000, 20000, 30000, 40000, 50000, 90000];
+	// 	const labels = [];
+	// 	let from, to;
+
+	// 	for (let i = 0; i < grades.length; i++) {
+	// 		from = grades[i];
+	// 		to = grades[i + 1];
+
+	// 		labels.push(`<i style="background:${getColor(from + 1)}"></i> ${from}${to ? `&ndash;${to}` : '+'}`);
+	// 	}
+
+	// 	div.innerHTML = labels.join('<br>');
+	// 	return div;
+	// };
+
+	// legend.addTo(map);
     
 
     const baseballIcon = L.icon({
