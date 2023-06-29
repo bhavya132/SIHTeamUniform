@@ -288,7 +288,7 @@
     <div id="map_canvas" style="width:100%;height:600px;">
  </div>
         <div id="basemaps-wrapper" class="leaflet-bar">
-        <select id="basemaps" >
+        <select id="basemaps" ></select>
     
     
     <!-- <option value="OpenStreetMap">OpenStreetMap</option>
@@ -307,7 +307,7 @@
     <option value="ShadedRelief">Shaded Relief</option>
     <option value="Physical">Physical</option> -->
     
-  </select>
+  
 </div>
                     <!-- <div id="previewbox" style="width:40%;height:40%;display:none;text-align:center;border-radius:4px;overflow:auto;">
                         <span>For complete and larger view, subscribe to</span><br>
@@ -559,15 +559,25 @@
     (function() {
         var elm = document.getElementById('basemaps'),
             df = document.createDocumentFragment();
-            
+        // OSM
         var option = document.createElement('option');
         option.value = 'OpenStreetMap';
         option.appendChild(document.createTextNode('OpenStreetMap'));
         df.appendChild(option);
-        
+        // OTM
         var option = document.createElement('option');
         option.value = 'OpenTopoMap';
         option.appendChild(document.createTextNode("OpenTopoMap"));
+        df.appendChild(option);
+        // Mumbai Population Density (2011)
+        var option = document.createElement('option');
+        option.value = 'Mumbai Population Density';
+        option.appendChild(document.createTextNode("Mumbai Population Density"));
+        df.appendChild(option);
+        // add crowd source photos layer
+        var option = document.createElement('option');
+        option.value = 'Crowd-Sourced Photos';
+        option.appendChild(document.createTextNode("Crowd-Sourced Photos"));
         df.appendChild(option);
             
         for (var i = 1; i <= 5; i++) {
@@ -619,6 +629,84 @@
             // layer.bindPopup(feature.properties.popupContent + '\n' + feature.geometry.coordinates);
         }
     }
+
+    // add mumbai population density (2011)
+    var mumbai_dict = JSON.parse('{{mumbai_dict | tojson}}');
+    // get color depending on population density value
+    function getColor(d) {
+        return d > 90000 ? '#800026' :
+            d > 50000  ? '#BD0026' :
+            d > 40000  ? '#E31A1C' :
+            d > 30000  ? '#FC4E2A' :
+            d > 20000   ? '#FD8D3C' :
+            d > 10000   ? '#FEB24C' :
+            d > 5000   ? '#FED976' :
+                        '#FFEDA0';
+    };
+
+      //extend Leaflet to create a GeoJSON layer from a TopoJSON file
+      L.TopoJSON = L.GeoJSON.extend({
+        addData: function (data) {
+          var geojson, key;
+          if (data.type === "Topology") {
+            for (key in data.objects) {
+              if (data.objects.hasOwnProperty(key)) {
+                geojson = topojson.feature(data, data.objects[key]);
+                L.GeoJSON.prototype.addData.call(this, geojson);
+              }
+            }
+            return this;
+          }
+          L.GeoJSON.prototype.addData.call(this, data);
+          return this;
+        }
+      });
+
+      
+
+      L.topoJson = function (data, options) {
+        return new L.TopoJSON(data, options);
+      };
+
+      //create an empty geojson layer, 
+      //create a different style for each individual feature
+      //with a style and a popup on click
+      var geojson = L.topoJson(null, {
+        style: function(feature){
+          return {
+            color: "#000",
+            opacity: 1,
+            weight: 1,
+            //fillColor: getColor(feature.properties.density),
+            fillColor: getColor(mumbai_dict[feature.properties.name].TOT_P_DEN),
+            fillOpacity: 0.8
+          }
+        },
+        //The onEachFeature option is a function that gets called on each feature before adding it to a GeoJSON layer. 
+        //A common reason to use this option is to attach a popup to features when they are clicked.
+        onEachFeature: function(feature, layer) {
+            // layer.on({
+            //     mouseover: highlightFeature,
+            //     mouseout: resetHighlight,
+            //     click: zoomToFeature
+            // });
+          //layer.bindPopup('<p>'+feature.properties.name+'</p>')
+          layer.bindPopup('<p><b>'+mumbai_dict[feature.properties.name].Ward_Names+'</b><br>'+mumbai_dict[feature.properties.name].TOT_P_DEN+' people/km<sup>2</sup></p>')
+        }
+      }).addTo(map); //TODO: ADD SET BOUNDS TO MAP FOR ZOOM IN, AND EVENT LISTENER
+    //   map.fitBounds(geojson.getBounds());
+      //fill: #317581;
+      //define a function to get and parse geojson from URL
+      async function getGeoData(url) {
+        let response = await fetch(url);
+        let data = await response.json();
+        console.log(data)
+        return data;
+      }
+      
+    //   //fetch the geojson and add it to our geojson layer
+    //   getGeoData('https://gist.githubusercontent.com/mickeykedia/9d9144072c5f637c26995569dd347614/raw/b65134846607235adf4ad6498713deed77d3b4b5/Mumbai_Topojson.topojson').then(data => geojson.addData(data));
+    
     //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     //    attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
     //}).addTo(map);
@@ -672,43 +760,6 @@
     // };
 
     // info.addTo(map);
-    // add mumbai population density (2011)
-    var mumbai_dict = JSON.parse('{{mumbai_dict | tojson}}');
-    // get color depending on population density value
-    function getColor(d) {
-        return d > 90000 ? '#800026' :
-            d > 50000  ? '#BD0026' :
-            d > 40000  ? '#E31A1C' :
-            d > 30000  ? '#FC4E2A' :
-            d > 20000   ? '#FD8D3C' :
-            d > 10000   ? '#FEB24C' :
-            d > 5000   ? '#FED976' :
-                        '#FFEDA0';
-    };
-
-      //extend Leaflet to create a GeoJSON layer from a TopoJSON file
-      L.TopoJSON = L.GeoJSON.extend({
-        addData: function (data) {
-          var geojson, key;
-          if (data.type === "Topology") {
-            for (key in data.objects) {
-              if (data.objects.hasOwnProperty(key)) {
-                geojson = topojson.feature(data, data.objects[key]);
-                L.GeoJSON.prototype.addData.call(this, geojson);
-              }
-            }
-            return this;
-          }
-          L.GeoJSON.prototype.addData.call(this, data);
-          return this;
-        }
-      });
-
-      
-
-      L.topoJson = function (data, options) {
-        return new L.TopoJSON(data, options);
-      };
     
     // mouseover events
     // function highlightFeature(e) {
@@ -735,43 +786,7 @@
 	// 	map.fitBounds(e.target.getBounds());
 	// }
 
-      //create an empty geojson layer, 
-      //create a different style for each individual feature
-      //with a style and a popup on click
-      var geojson = L.topoJson(null, {
-        style: function(feature){
-          return {
-            color: "#000",
-            opacity: 1,
-            weight: 1,
-            //fillColor: getColor(feature.properties.density),
-            fillColor: getColor(mumbai_dict[feature.properties.name].TOT_P_DEN),
-            fillOpacity: 0.8
-          }
-        },
-        //The onEachFeature option is a function that gets called on each feature before adding it to a GeoJSON layer. 
-        //A common reason to use this option is to attach a popup to features when they are clicked.
-        onEachFeature: function(feature, layer) {
-            // layer.on({
-            //     mouseover: highlightFeature,
-            //     mouseout: resetHighlight,
-            //     click: zoomToFeature
-            // });
-          //layer.bindPopup('<p>'+feature.properties.name+'</p>')
-          layer.bindPopup('<p>'+mumbai_dict[feature.properties.name].Ward_Names+'</p>')
-        }
-      }).addTo(map); //TODO: ADD SET BOUNDS TO MAP FOR ZOOM IN, AND EVENT LISTENER
-      //fill: #317581;
-      //define a function to get and parse geojson from URL
-      async function getGeoData(url) {
-        let response = await fetch(url);
-        let data = await response.json();
-        console.log(data)
-        return data;
-      }
       
-      //fetch the geojson and add it to our geojson layer
-      getGeoData('https://gist.githubusercontent.com/mickeykedia/9d9144072c5f637c26995569dd347614/raw/b65134846607235adf4ad6498713deed77d3b4b5/Mumbai_Topojson.topojson').then(data => geojson.addData(data));
     
     // add legend
     // const legend = L.control({position: 'bottomright'});
@@ -797,36 +812,10 @@
 	// legend.addTo(map);
     
 
-    const baseballIcon = L.icon({
-      iconUrl: "{{db_result['img']}}", //'https://media.geeksforgeeks.org/wp-content/uploads/geeksforgeeks-13.png',
-      iconSize: [32, 37],
-      iconAnchor: [16, 37],
-      popupAnchor: [0, -28]
-    });
-
-    var geojsonFeature = {
-        "type": "Feature",
-        "properties": {
-            "name": "Coors Field",
-            "amenity": "Baseball Stadium",
-            "popupContent":"<b>Flood:</b> " + "{{db_result['flood']}}" //"This is where the Rockies play!"
-        },
-        "geometry": {
-            "type": "Point",
-            "coordinates": ["{{db_result['lon']}}","{{db_result['lat']}}"]//[-104.99404, 39.75621]
-        }
-    };
-
-    const coorsLayer = L.geoJSON(geojsonFeature, {
-
-      pointToLayer(feature, latlng) {
-        return L.marker(latlng, {icon: baseballIcon});
-      },
-
-      onEachFeature
-    }).addTo(map);
+    
     
     var layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    var mumbai_layer; //initialised to undefined by default
     var layerLabels;
 
     document
@@ -841,21 +830,21 @@
         });
     
     // add legend
-    var legend = L.control({position: 'bottomright'});
+    // var legend = L.control({position: 'bottomright'});
 
-    legend.onAdd = function (map,image_list) {
+    // legend.onAdd = function (map,image_list) {
 
-        var div = L.DomUtil.create('div', 'info legend');
+    //     var div = L.DomUtil.create('div', 'info legend');
 
-        // loop through our density intervals and generate a label with a colored square for each interval
-        for (var i = 0; i < image_list.length; i++) {
-            div.innerHTML +=
-            // popn_density_legend[i] + (" <img src="+ image_list[i] +" height='50' width='100'>") +'<br>';
-            (" <img src="+ image_list[i] +" >") +'<br>';
-        }
+    //     // loop through our density intervals and generate a label with a colored square for each interval
+    //     for (var i = 0; i < image_list.length; i++) {
+    //         div.innerHTML +=
+    //         // popn_density_legend[i] + (" <img src="+ image_list[i] +" height='50' width='100'>") +'<br>';
+    //         (" <img src="+ image_list[i] +" >") +'<br>';
+    //     }
 
-        return div;
-    };
+    //     return div;
+    // };
 
     var isColorFloodMap;
     var fmTileUrl = 'https://www.floodmap.net/getFMTile.ashx?x={x}&y={y}&z={z}&e=';
@@ -1010,6 +999,7 @@
             if (!isColorFloodMap)
                 floodLayer.bringToFront();
         }
+
         else if (basemap === 'OpenTopoMap') {
             if (layer) {
                 map.removeLayer(layer);
@@ -1019,8 +1009,59 @@
             }).addTo(map);
             if (!isColorFloodMap)
                 floodLayer.bringToFront();
-        
         }
+
+        else if (basemap === 'Mumbai Population Density') {
+            if (mumbai_layer) {
+                map.removeLayer(mumbai_layer);
+            }
+            //fetch the geojson and add it to our geojson layer
+            getGeoData('https://gist.githubusercontent.com/mickeykedia/9d9144072c5f637c26995569dd347614/raw/b65134846607235adf4ad6498713deed77d3b4b5/Mumbai_Topojson.topojson').then(data => geojson.addData(data));
+            // console.log('geojson bounds:',geojson.getBounds());
+            // map.fitBounds(geojson.getBounds());
+            map.flyTo([19.102, 72.85], 11);
+            if (!isColorFloodMap)
+                floodLayer.bringToFront();
+        }
+
+        else if (basemap === 'Crowd-Sourced Photos') {
+            
+                const flood_img = L.icon({
+                iconUrl: "{{flooded_results[0]['image']}}", //'https://media.geeksforgeeks.org/wp-content/uploads/geeksforgeeks-13.png',
+                iconSize: [32, 37],
+                iconAnchor: [16, 37],
+                popupAnchor: [0, -28]
+                });
+
+                var geojsonFeature = {
+                    "type": "Feature",
+                    "properties": {
+                        // "name": "Coors Field",
+                        // "amenity": "Baseball Stadium",
+                        "popupContent":"<b>Flood:</b> " + "{{flooded_results[0]['flood']}}" //"This is where the Rockies play!"
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": ["{{flooded_results[0]['lon']}}","{{flooded_results[0]['lat']}}"]//[-104.99404, 39.75621]
+                    }
+                };
+
+                const coorsLayer = L.geoJSON(geojsonFeature, {
+
+                pointToLayer(feature, latlng) {
+                    return L.marker(latlng, {icon: flood_img});
+                },
+
+                onEachFeature
+                }).addTo(map);
+            
+            
+
+            // map.flyTo([19.102, 72.85], 11);
+            if (!isColorFloodMap)
+                floodLayer.bringToFront();
+        }
+
         else {
             var geoserver = 'https://sedac.ciesin.columbia.edu/geoserver/wms';
             var basemap_split = basemap.split("_");
