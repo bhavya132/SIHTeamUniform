@@ -895,7 +895,7 @@
                 map.removeLayer(layer);
             }
             layer = L.tileLayer.wms(geoserver, {
-                layers: ssp_gpp[ssp_type][ssp_year]['name'],
+                layers: ssp_gpp[ssp_type][ssp_year]['name']+','+'cartographic:00-global-labels',
                 format: 'image/png',
                 transparent: true
             }).addTo(map);
