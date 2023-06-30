@@ -21,11 +21,20 @@ result = db.collection('floods').stream()
 # print(ref.get())
 
 app = Flask(__name__)
+# Ensure templates are auto-reloaded
 
 
 @app.route("/")
 def main():
-    return "Hi"
+    result = db.collection('floods').stream()
+    flooded_results = dict()
+    if result:
+        for i,r in enumerate(result):
+            db_result = r.to_dict()
+            if ('flood' in list(db_result)) and (db_result['flood'] is True):
+                flooded_results[i] = db_result
+    print(flooded_results)
+    return render_template("index.html",flooded_results = flooded_results)
 
 @app.route("/hello/<name>")
 def hello_there(name = None):
@@ -45,7 +54,21 @@ def test_georaster():
 
 @app.route("/my_map")
 def my_map():
-    return render_template("my_map.html")
+    result = db.collection('floods').stream()
+    flooded_results = dict()
+    if result:
+        for i,r in enumerate(result):
+            db_result = r.to_dict()
+            if ('flood' in list(db_result)) and (db_result['flood'] is True):
+                flooded_results[i] = db_result
+    print(flooded_results)
+
+    df = pd.read_csv('https://gist.githubusercontent.com/mickeykedia/9d9144072c5f637c26995569dd347614/raw/b65134846607235adf4ad6498713deed77d3b4b5/ward_level_collated.csv')
+    df_cropped = df.loc[:,['Ward_Alphabet','Ward_Names','TOT_P_DEN']].set_index(['Ward_Alphabet'])
+    mumbai_dict = df_cropped.to_dict('index')
+
+    return render_template("coastmap.html",flooded_results = flooded_results, mumbai_dict=mumbai_dict)
+    # return render_template("my_map.html")
 
 @app.route("/floodmap")
 def test_floodmap():
@@ -54,8 +77,9 @@ def test_floodmap():
     if result:
         for r in result:
             db_result = r.to_dict()
-            if db_result['flood'] is True:
+            if ('flood' in list(db_result)) and (db_result['flood'] is True):
                 flooded_results.append(db_result)
+    print(flooded_results)
 
     df = pd.read_csv('https://gist.githubusercontent.com/mickeykedia/9d9144072c5f637c26995569dd347614/raw/b65134846607235adf4ad6498713deed77d3b4b5/ward_level_collated.csv')
     df_cropped = df.loc[:,['Ward_Alphabet','Ward_Names','TOT_P_DEN']].set_index(['Ward_Alphabet'])
@@ -89,12 +113,14 @@ def wms_test():
 if __name__ == "__main__":
     # for r in result:
     #     print(r.to_dict())
-    app.run()
-    # flooded_results = []
+    app.jinja_env.auto_reload = True
+    app.config["TEMPLATES_AUTO_RELOAD"] = True
+    app.run(debug=True)
+    # flooded_results = dict()
     # if result:
-    #     for r in result:
+    #     for i,r in enumerate(result):
     #         db_result = r.to_dict()
-    #         if db_result['flood'] is True:
-    #             flooded_results.append(db_result)
+    #         if ('flood' in list(db_result)) and (db_result['flood'] is True):
+    #             flooded_results[i] = db_result
     # print(flooded_results)
     # app.run(port=1111)

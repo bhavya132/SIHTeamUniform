@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="alternate" href="https://www.floodmap.net" hreflang="en" />
+    <link rel="alternate" href="https://www.floodmap.net/ru/" hreflang="ru" />
+    
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<title>CoastMap: {% block title %}{% endblock %}</title>
+<meta name="description" content="Flood Map shows the map of the area which could get flooded if the water level rises to a particular elevation. Sea level rise map. Bathymetric map, ocean depth. Effect of Global Warming and Climate Change."/>
+
+<meta name="keywords" content="flood map, flood water level, elevation map, floodplain map, sea level rise"/>
+
+<!-- Load Leaflet from CDN -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<!-- <link rel="stylesheet" href="https://maps.kartoza.com/css/leaflet.wmslegend.css"> -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    
+     <!-- Load Esri Leaflet from CDN -->
+  <script src="https://unpkg.com/esri-leaflet@2.3.2/dist/esri-leaflet.js"
+  integrity="sha512-6LVib9wGnqVKIClCduEwsCub7iauLXpwrd5njR2J507m3A2a4HXJDLMiSZzjcksag3UluIfuW1KzuWVI5n/cuQ=="
+  crossorigin=""></script>
+  <!-- Load Esri Leaflet Geocoder from CDN -->
+  <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.2/dist/esri-leaflet-geocoder.css"
+    integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+    crossorigin="">
+
+    <script src="https://unpkg.com/leaflet-image@latest/leaflet-image.js"></script>
+    
+
+<script src="https://unpkg.com/topojson@3.0.2/dist/topojson.min.js"></script>
+<!--Leaflet Foolscreen -->
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+<!-- <script src="https://maps.kartoza.com/js/leaflet.wmslegend.js"></script> -->
+<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+<!-- favicon -->
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="theme-color" content="#ffffff">
+<!-- favicon end -->
+
+    <!-- Bootstrap -->
+    <link href="/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    
+<style id="antiClickjack">body{display:none !important;}</style><script type="text/javascript">if (self === top){ var antiClickjack = document.getElementById("antiClickjack"); antiClickjack.parentNode.removeChild(antiClickjack); } else { top.location = self.location; } </script>
+<style>
+    .footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    font-size:1.2em;
+    background-color: white;
+    text-align: center;
+    color: #337ab7;
+    padding:10px 10px 10px 10px;
+    /* border-top:solid 3px #337ab7; */
+    }
+</style>
+<style>
+    .leaflet-tile-container img {
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.05);
+    }
+    .rowlegend {
+    display: flex;
+    }
+
+    .column {
+    flex: 50%;
+    }
+
+  #basemaps-wrapper {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 400;
+    background: rgba(255, 255, 255, 0.521);
+    padding: 10px;
+  }
+  #basemaps {
+    margin-bottom: 5px;
+  }
+  #previewbox {
+    position: absolute;
+    top: 30%;
+    right: 30%;
+    z-index: 400;
+    background: rgba(255, 255, 255, 0.514);
+    padding: 10px;
+  }
+</style>
+
+
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-350192-13', 'auto');
+</script>
+<script>
+    (function () {
+
+        const handleReady = ({ detail }) => {
+            const { memberInfo } = detail;
+            if (memberInfo) {
+                if (memberInfo.profileImageUrl)
+                    $("#userProfile").attr("src", memberInfo.profileImageUrl);
+                ga('set', 'userId', memberInfo.id);
+                ga('send', 'pageview');
+            }
+            else {
+                ga('send', 'pageview');
+            }
+        }
+        document.addEventListener('MemberSpace.ready', handleReady);
+
+        //Event after login
+        const handleMemberInfo = ({ detail }) => {
+            const { memberInfo } = detail;
+            var year = new Date().getFullYear();
+            if (memberInfo && year < 2023) {
+                var postMemberInfo = {
+                    "email": memberInfo.email,
+                    "name": memberInfo.name,
+                    "customField14339": memberInfo.customSignupFields[1].value,
+                    "customField14340": memberInfo.customSignupFields[2].value,
+                    "customField14341": memberInfo.customSignupFields[3].value,
+                    "customField14342": memberInfo.customSignupFields[4].value,
+                    "customField14343": memberInfo.customSignupFields[5].value,
+                    "customField14344": memberInfo.customSignupFields[6].value
+                };
+
+                try {
+                    $.ajax({
+                        type: "POST",
+                        url: "https://www.floodmap.net/StripeConnect/PostUpdateCust.aspx",
+                        data: postMemberInfo
+                    });
+                }
+                catch (err) {
+                }
+            }
+        }
+        document.addEventListener('MemberSpace.member.info', handleMemberInfo);
+
+    }());
+    var MemberSpace = window.MemberSpace || { subdomain: "floodmap", domain: "members.floodmap.net" };
+    (function (d) {
+        var s = d.createElement("script");
+        s.src = "https://cdn.memberspace.com/scripts/widgets.js";
+        var e = d.getElementsByTagName("script")[0];
+        e.parentNode.insertBefore(s, e);
+    }(document));
+</script>
+</head>
+<body style="padding-bottom:200px;">
+
+    <ul class="navbar-nav ml-auto mt-2">
+        <li class="nav-item"><a class="nav-link" href="/my_map">CoastMap</a></li>
+        <li class="nav-item"><a class="nav-link" href="/floodmap">test</a></li>
+    </ul>
+
+    <main class="container-fluid">
+        {% block main %}{% endblock %}
+    </main>
+
+    {% block javascript %}{% endblock %}
+
+    <footer class="small text-center text-muted">
+        Data Sources: <a href="https://www.mapzen.com/">Mazpzen</a>, <a title="The National Map" href="https://www.usgs.gov/core-science-systems/national-geospatial-program/national-map">TNM</a>, <a href="https://www.usgs.gov/centers/eros/science/usgs-eros-archive-digital-elevation-shuttle-radar-topography-mission-srtm-1-arc?qt-science_center_objects=0#qt-science_center_objects">SRTM</a>, <a href="https://www.usgs.gov/land-resources/eros/coastal-changes-and-impacts">GMTED</a>, <a href="https://www.ngdc.noaa.gov/mgg/global/global.html">ETOPO1</a>, <a href="https://floodmap.net">floodmap.net</a>, <a href = "https://sedac.ciesin.columbia.edu/">SEDAC</a>, <a href = "https://doi.org/10.1029/2022GL098477">Wu et al (2022)</a>
+    </footer>
+    
+</body>
+</html>
