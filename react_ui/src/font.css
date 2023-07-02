@@ -1,0 +1,11 @@
+@font-face {
+  font-family: "SFProDisplayRegular";
+  src: local(SFProDisplayRegular),
+    url(./fonts/SFPRODISPLAYREGULAR.OTF) format("opentype");
+}
+
+@font-face {
+  font-family: "SFPRODISPLAYLIGHTITALIC";
+  src: local(SFPRODISPLAYLIGHTITALIC),
+    url(./fonts/SFPRODISPLAYLIGHTITALIC.OTF) format("opentype");
+}
