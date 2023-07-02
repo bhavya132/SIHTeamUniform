@@ -67,7 +67,8 @@ def my_map():
     df_cropped = df.loc[:,['Ward_Alphabet','Ward_Names','TOT_P_DEN']].set_index(['Ward_Alphabet'])
     mumbai_dict = df_cropped.to_dict('index')
 
-    return render_template("coastmap.html",flooded_results = flooded_results, mumbai_dict=mumbai_dict)
+    landuse_url = r'layer\all.png'
+    return render_template("coastmap.html",flooded_results = flooded_results, mumbai_dict=mumbai_dict, landuse_url = landuse_url)
     # return render_template("my_map.html")
 
 @app.route("/floodmap")
@@ -109,6 +110,10 @@ def test_mumbaipopn():
 @app.route("/wms_test")
 def wms_test():
     return render_template("wms_test.html")
+
+@app.route("/svg_test")
+def svg_test():
+    return render_template("svg_test.html")
 
 if __name__ == "__main__":
     # for r in result:

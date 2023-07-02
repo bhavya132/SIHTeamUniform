@@ -42,12 +42,14 @@
         </div>
         
     </div>
+    
 {% endblock %}
 
 {% block javascript %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    
     <script>
         var autoPopup = false;
         if (autoPopup)
@@ -91,25 +93,18 @@
     (function() {
         var elm = document.getElementById('basemaps'),
             df = document.createDocumentFragment();
-        // OSM
+        var options_list = ['OpenStreetMap',"OpenTopoMap",'Mumbai Population Density',"Crowd-Sourced Photos",'Land use'];
+        for (var j = 0; j < options_list.length; j++){
+            var option = document.createElement('option');
+            option.value = options_list[j];
+            option.appendChild(document.createTextNode(options_list[j]));
+            df.appendChild(option);
+        }
+
+        //Population Density (2020)
         var option = document.createElement('option');
-        option.value = 'OpenStreetMap';
-        option.appendChild(document.createTextNode('OpenStreetMap'));
-        df.appendChild(option);
-        // OTM
-        var option = document.createElement('option');
-        option.value = 'OpenTopoMap';
-        option.appendChild(document.createTextNode("OpenTopoMap"));
-        df.appendChild(option);
-        // Mumbai Population Density (2011)
-        var option = document.createElement('option');
-        option.value = 'Mumbai Population Density';
-        option.appendChild(document.createTextNode("Mumbai Population Density"));
-        df.appendChild(option);
-        // add crowd source photos layer
-        var option = document.createElement('option');
-        option.value = 'Crowd-Sourced Photos';
-        option.appendChild(document.createTextNode("Crowd-Sourced Photos"));
+        option.value = 'Population Density (2020)';
+        option.appendChild(document.createTextNode('Population Density (2020)'));
         df.appendChild(option);
             
         for (var i = 1; i <= 5; i++) {
@@ -231,7 +226,8 @@
       }
 
     var layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-    var mumbai_layer; //initialised to undefined by default
+    var mumbai_popn_density; //initialised to undefined by default
+    var mumbai_landuse;
     var layerLabels;
 
     document
@@ -389,13 +385,52 @@
         }
 
         else if (basemap === 'Mumbai Population Density') {
-            if (mumbai_layer) {
-                map.removeLayer(mumbai_layer);
+            // if (mumbai_layer) {
+            //     map.removeLayer(mumbai_layer);
+            // }
+            if (mumbai_landuse) {
+                map.removeLayer(mumbai_landuse);
+                mumbai_landuse = false;
             }
             //fetch the geojson and add it to our geojson layer
             getGeoData('https://gist.githubusercontent.com/mickeykedia/9d9144072c5f637c26995569dd347614/raw/b65134846607235adf4ad6498713deed77d3b4b5/Mumbai_Topojson.topojson').then(data => geojson.addData(data));
+            
+            if (!mumbai_popn_density) {
+                geojson.addTo(map);
+                mumbai_popn_density = true;
+            }
+            
             // console.log('geojson bounds:',geojson.getBounds());
             // map.fitBounds(geojson.getBounds());
+            map.flyTo([19.102, 72.85], 11);
+            if (!isColorFloodMap)
+                floodLayer.bringToFront();
+        }
+
+        else if (basemap === 'Land use') {
+            if (mumbai_popn_density) {
+                map.removeLayer(geojson);
+                mumbai_popn_density = false;
+            }
+
+            //bounds coordinates for overlay
+            var swlat = 18.877702;
+            var swlong = 72.671814;
+            var nelat = 19.339653;
+            var nelong = 73.048096;
+
+            
+            var errorOverlayUrl = 'https://cdn-icons-png.flaticon.com/512/110/110686.png';
+
+            var latLngBounds = L.latLngBounds([[nelat, nelong], [swlat, swlong]]);
+            var imageOverlay = L.imageOverlay(imageUrl, latLngBounds, {
+                opacity: 0.8,
+                errorOverlayUrl: errorOverlayUrl,
+                alt: 'Land use map of mumbai',
+                interactive: false
+            }).addTo(map);
+
+            mumbai_landuse = true;
             map.flyTo([19.102, 72.85], 11);
             if (!isColorFloodMap)
                 floodLayer.bringToFront();
@@ -445,9 +480,21 @@
                 }).addTo(map);
             }
 
-                
+            if (!isColorFloodMap)
+                floodLayer.bringToFront();
+        }
+
+        else if (basemap === 'Population Density (2020)') {
+            var geoserver = 'https://sedac.ciesin.columbia.edu/geoserver/wms';
             
-            
+            if (layer) {
+                map.removeLayer(layer);
+            }
+            layer = L.tileLayer.wms(geoserver, {
+                layers: 'gpw-v4:gpw-v4-population-density_2020',
+                format: 'image/png',
+                transparent: true
+            }).addTo(map);
 
             if (!isColorFloodMap)
                 floodLayer.bringToFront();
@@ -518,6 +565,11 @@
         else if (basemap === 'OpenTopoMap') {
             legend_img.src = null;
             legend_desc.textContent = '{} is a free topographic map generated from OpenStreetMap data and SRTM elevation data. The map style is based on the official maps and focuses on good readability through high contrast and balanced signatures.'.format(basemap);
+        }
+
+        else if (basemap === 'Population Density (2020)') {
+            legend_img.src = 'https://sedac.ciesin.columbia.edu/geoserver/ows?service=WMS&request=GetLegendGraphic&format=image/png&width=15&height=15&layer=gpw-v4:gpw-v4-population-density-adjusted-to-2015-unwpp-country-totals_2020&style=gpw-v4-population-density-adjusted-to-2015-unwpp-country-totals_2020:default&';
+            legend_desc.textContent = '{} consists of estimates of human population density based on counts consistent with national census and population registers for the year 2020.'.format(basemap);
         }
 
         else {
