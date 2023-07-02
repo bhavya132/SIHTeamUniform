@@ -389,7 +389,7 @@
             //     map.removeLayer(mumbai_layer);
             // }
             if (mumbai_landuse) {
-                map.removeLayer(mumbai_landuse);
+                map.removeLayer(svg_landuse);
                 mumbai_landuse = false;
             }
             //fetch the geojson and add it to our geojson layer
@@ -412,26 +412,18 @@
                 map.removeLayer(geojson);
                 mumbai_popn_density = false;
             }
-
-            //bounds coordinates for overlay
-            var swlat = 18.877702;
-            var swlong = 72.671814;
-            var nelat = 19.339653;
-            var nelong = 73.048096;
-
-            
-            var errorOverlayUrl = 'https://cdn-icons-png.flaticon.com/512/110/110686.png';
-
-            var latLngBounds = L.latLngBounds([[nelat, nelong], [swlat, swlong]]);
-            var imageOverlay = L.imageOverlay(imageUrl, latLngBounds, {
-                opacity: 0.8,
-                errorOverlayUrl: errorOverlayUrl,
-                alt: 'Land use map of mumbai',
-                interactive: false
-            }).addTo(map);
-
-            mumbai_landuse = true;
             map.flyTo([19.102, 72.85], 11);
+            var swlat = 18.878474;//18.877702;
+            var swlong = 72.674303;//72.671814;
+            var nelat = 19.3400180;//19.339653;
+            var nelong = 73.045951;//73.048096;
+            const latLngBounds = L.latLngBounds([[nelat, nelong], [swlat, swlong]]);
+            var urlbase = 'http://akshaykore.github.io/mumdata/layer/';
+            var imageUrl = urlbase + "all.png";
+            var svg_landuse = L.imageOverlay(imageUrl, latLngBounds).addTo(map);
+	        map.fitBounds(latLngBounds);
+            mumbai_landuse = true;
+            
             if (!isColorFloodMap)
                 floodLayer.bringToFront();
         }
