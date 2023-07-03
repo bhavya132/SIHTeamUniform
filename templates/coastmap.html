@@ -195,39 +195,40 @@
         return new L.TopoJSON(data, options);
       };
 
-      //create an empty geojson layer, 
-      //create a different style for each individual feature
-      //with a style and a popup on click
-      var geojson = L.topoJson(null, {
+    //create an empty geojson layer, 
+    //create a different style for each individual feature
+    //with a style and a popup on click
+    var geojson = L.topoJson(null, {
         style: function(feature){
-          return {
+        return {
             color: "#000",
             opacity: 1,
             weight: 1,
             //fillColor: getColor(feature.properties.density),
             fillColor: getColor(mumbai_dict[feature.properties.name].TOT_P_DEN),
             fillOpacity: 0.8
-          }
+        }
         },
         //The onEachFeature option is a function that gets called on each feature before adding it to a GeoJSON layer. 
         //A common reason to use this option is to attach a popup to features when they are clicked.
         onEachFeature: function(feature, layer) {
-          layer.bindPopup('<p><b>'+mumbai_dict[feature.properties.name].Ward_Names+'</b><br>'+mumbai_dict[feature.properties.name].TOT_P_DEN+' people/km<sup>2</sup></p>')
+        layer.bindPopup('<p><b>'+mumbai_dict[feature.properties.name].Ward_Names+'</b><br>'+mumbai_dict[feature.properties.name].TOT_P_DEN+' people/km<sup>2</sup></p>')
         }
-      }).addTo(map); //TODO: ADD SET BOUNDS TO MAP FOR ZOOM IN, AND EVENT LISTENER
+    });//.addTo(map); //TODO: ADD SET BOUNDS TO MAP FOR ZOOM IN, AND EVENT LISTENER
     //   map.fitBounds(geojson.getBounds());
-      //fill: #317581;
-      //define a function to get and parse geojson from URL
-      async function getGeoData(url) {
+    //fill: #317581;
+    //define a function to get and parse geojson from URL
+    async function getGeoData(url) {
         let response = await fetch(url);
         let data = await response.json();
         console.log(data)
         return data;
-      }
+    }
 
     var layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-    var mumbai_popn_density; //initialised to undefined by default
-    var mumbai_landuse;
+    var mumbai_popn_density = false; //initialised to undefined by default
+    var mumbai_landuse = false;
+    var svg_landuse;
     var layerLabels;
 
     document
@@ -392,6 +393,7 @@
                 map.removeLayer(svg_landuse);
                 mumbai_landuse = false;
             }
+            
             //fetch the geojson and add it to our geojson layer
             getGeoData('https://gist.githubusercontent.com/mickeykedia/9d9144072c5f637c26995569dd347614/raw/b65134846607235adf4ad6498713deed77d3b4b5/Mumbai_Topojson.topojson').then(data => geojson.addData(data));
             
@@ -420,8 +422,8 @@
             const latLngBounds = L.latLngBounds([[nelat, nelong], [swlat, swlong]]);
             var urlbase = 'http://akshaykore.github.io/mumdata/layer/';
             var imageUrl = urlbase + "all.png";
-            var svg_landuse = L.imageOverlay(imageUrl, latLngBounds).addTo(map);
-	        map.fitBounds(latLngBounds);
+            svg_landuse = L.imageOverlay(imageUrl, latLngBounds).addTo(map);
+	        // map.fitBounds(latLngBounds);
             mumbai_landuse = true;
             
             if (!isColorFloodMap)
