@@ -34,11 +34,12 @@
     <div class="rowlegend">
         <div class="column">
             <h3 class="panel-title"><b>Legend</b></h3>
-            <img src="colorbar.png" id="legend">
+            <img src="C:/Users/PAKHUIYING/Documents/Programming/SIHTeamUniform/flood_image/colorbar.png" id="legend">
         </div>
         <div class="column">
             <h4 class="panel-title"><b>Description</b></h4>
             <p id="legend_desc">OpenStreetMap - geospatial data which features roads and street data</p>
+            <div class="landuselegend"></div>
         </div>
         
     </div>
@@ -89,6 +90,378 @@
                             "2100": {'name':wms_name_2100,'uri':uri_base+wms_name_2100+'&'}};
     }
     console.log(ssp_gpp);
+
+    //legend data
+    var legendurl = 'http://akshaykore.github.io/mumdata/layers/legend/';
+    var urlbase = 'http://akshaykore.github.io/mumdata/layers/';
+
+    var legenddata = [
+        
+        {
+            "id" : 0,
+            "name":"Residential",
+            "type":"static",
+            "url":urlbase + "residential.svg",
+            "legend": legendurl + "residential.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {
+            "id" : 1,
+            "name":"Commercial",
+            "type":"static",
+            "url":urlbase + 'commercial.svg',
+            "legend": legendurl + "commercial.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 2,
+            "name":"Education",
+            "type":"static",
+            "url":urlbase + 'education.svg',
+            "legend": legendurl + "education.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 32,
+            "name":"Dropouts Education",
+            "legend": legendurl + "education.jpg",
+            "type":"dynamic",
+            "tdata":[
+                {"tid":"32_1","tname":"All", "turl":urlbase + "education.svg", "tvisible":false},
+                {"tid":"32_2", "tname":"< 10%", "turl":urlbase + "educationdropoutl10.svg", "tvisible":false},
+                {"tid":"32_3", "tname":"> 10%", "turl":urlbase + "educationdropoutm10.svg", "tvisible":false}
+            ],
+            //"url":"http://localhost/~akshaykore/layer/all.png",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+
+        {   "id" : 3,
+            "name":"Medical",
+            "type":"static",
+            "url":urlbase + 'medical.svg',
+            "legend": legendurl + "medical.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 4,
+            "name":"Industrial",
+            "type":"static",
+            "url":urlbase + 'industrial.svg',
+            "legend": legendurl + "industrial.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 5,
+            "name":"26th July Floods",
+            "legend": legendurl + "dynamic.jpg",
+            "type":"dynamic",
+            "tdata":[
+                {"tid":"5_1","tname":"2:00 PM", "turl":urlbase + "26july1.gif", "tvisible":false},
+                {"tid":"5_2", "tname":"2:30 PM", "turl":urlbase + "26july2.gif", "tvisible":false},
+                {"tid":"5_3", "tname":"4:00 PM", "turl":urlbase + "26july3.gif", "tvisible":false}
+            ],
+            //"url":"http://localhost/~akshaykore/layer/all.png",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+            
+        {   "id" : 6,
+            "name":"Natural Areas",
+            "type":"static",
+            "url":urlbase + 'naturalareas.svg',
+            "legend": legendurl + "naturalareas.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 7,
+            "name":"Open Spaces",
+            "type":"static",
+            "url":urlbase + 'openspace.svg',
+            "legend": legendurl + "openspace.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 8,
+            "name":"Forest",
+            "type":"static",
+            "url":urlbase + 'forest.svg',
+            "legend": legendurl + "forest.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 9,
+            "name":"Swimming Pools",
+            "type":"static",
+            "url":urlbase + 'swimmingpool.svg',
+            "legend": legendurl + "swimmingpool.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 10,
+            "name":"Government Offices",
+            "type":"static",
+            "url":urlbase + 'governmentoffice.svg',
+            "legend": legendurl + "governmentoffice.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 11,
+            "name":"Law and Order",
+            "type":"static",
+            "url":urlbase + 'laworder.svg',
+            "legend": legendurl + "laworder.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 12,
+            "name":"Municipal Market",
+            "type":"static",
+            "url":urlbase + 'municipalmarket.svg',
+            "legend": legendurl + "municipalmarket.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 13,
+            "name":"Municipal Chowkies",
+            "type":"static",
+            "url":urlbase + 'municipalchowkies.svg',
+            "legend": legendurl + "municipalchowkies.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 14,
+            "name":"Municipal Office",
+            "type":"static",
+            "url":urlbase + 'municipaloffice.svg',
+            "legend": legendurl + "municipaloffice.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 15,
+            "name":"Communication",
+            "type":"static",
+            "url":urlbase + 'communication.svg',
+            "legend": legendurl + "communication.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 16,
+            "name":"Under Construction",
+            "type":"static",
+            "url":urlbase + 'underconstruction.svg',
+            "legend": legendurl + "underconstruction.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 17,
+            "name":"Urban Villages",
+            "type":"static",
+            "url":urlbase + 'urbanvillage.svg',
+            "legend": legendurl + "urbanvillage.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 18,
+            "name":"Utilities",
+            "type":"static",
+            "url":urlbase + 'utility.svg',
+            "legend": legendurl + "utility.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 19,
+            "name":"Vacant Land",
+            "type":"static",
+            "url":urlbase + 'vacant.svg',
+            "legend": legendurl + "vacant.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 20,
+            "name":"Water Bodies",
+            "type":"static",
+            "url":urlbase + 'waterbodiesall.svg',
+            "legend": legendurl + "waterbodiesall.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 21,
+            "name":"Cemetery",
+            "type":"static",
+            "url":urlbase + 'cemetery.svg',
+            "legend": legendurl + "cemetery.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 22,
+            "name":"Informal Markets",
+            "type":"static",
+            "url":urlbase + 'informalmarket.svg',
+            "legend": legendurl + "informalmarket.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 23,
+            "name":"Primary Activity",
+            "type":"static",
+            "url":urlbase + 'primaryactivity.svg',
+            "legend": legendurl + "primaryactivity.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 24,
+            "name":"Shopline",
+            "type":"static",
+            "url":urlbase + 'shopline.svg',
+            "legend": legendurl + "shopline.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 25,
+            "name":"Slum Areas",
+            "type":"static",
+            "url":urlbase + 'slum.svg',
+            "legend": legendurl + "slum.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 26,
+            "name":"Social Amenities",
+            "type":"static",
+            "url":urlbase + 'socialamenities.svg',
+            "legend": legendurl + "socialamenities.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 27,
+            "name":"Transport",
+            "type":"static",
+            "url":urlbase + 'transport.svg',
+            "legend": legendurl + "transport.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 28,
+            "name":"Road Network",
+            "type":"static",
+            "url":urlbase + 'roadnetwork.svg',
+            "legend": legendurl + "roadnetwork.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 34,
+            "name":"Classified",
+            "type":"static",
+            "url":urlbase + 'classified.svg',
+            "legend": legendurl + "classified.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 33,
+            "name":"Malaria Prone",
+            "type":"static",
+            "url":urlbase + 'malaria.svg',
+            "legend": legendurl + "malaria.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 29,
+            "name":"SPAs",
+            "type":"static",
+            "url":urlbase + 'spa.svg',
+            "legend": legendurl + "spa.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 30,
+            "name":"Planning Sectors",
+            "type":"static",
+            "url":urlbase + 'planningsector.svg',
+            "legend": legendurl + "planningsector.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        },
+        
+        {   "id" : 31,
+            "name":"Ward Boundary",
+            "type":"static",
+            "url":urlbase + 'wardboundary.svg',
+            "legend": legendurl + "wardboundary.jpg",
+            "visible":false,
+            "author":"MCGM",
+            "value":true
+        }
+
+        
+
+    ];
 
     (function() {
         var elm = document.getElementById('basemaps'),
@@ -561,10 +934,56 @@
             legend_desc.textContent = '{} is a free topographic map generated from OpenStreetMap data and SRTM elevation data. The map style is based on the official maps and focuses on good readability through high contrast and balanced signatures.'.format(basemap);
         }
 
+        else if (basemap === 'Land use') {
+            legend_img.src = null;
+            legend_desc.textContent = null;
+
+            var miniClass = document.querySelector('.landuselegend');
+            miniClass.innerHTML = ``;
+            function showLegend() {
+                for (let i = 0; i < legenddata.length; i++){
+                    if (legenddata[i]['type'] === "static"){
+                        var legend_uri = legenddata[i]['legend'];
+                        var legend_description = legenddata[i]['name'];
+                        miniClass.innerHTML +=  ` <img src="${legend_uri}"> ${legend_description} <br>`;
+                    }
+                }
+            }
+
+            showLegend();
+
+        }
+
+        else if (basemap === 'Mumbai Population Density') {
+            legend_img.src = null;
+            legend_desc.textContent = null;
+
+            var miniClass = document.querySelector('.landuselegend');
+            miniClass.innerHTML = ``;
+            miniClass.innerHTML = `<div class='my-legend'>
+            <div class='legend-title'>Mumbai Population Density (people / km<sup>2</sup> (2011))</div>
+            <div class='legend-scale'>
+            <ul class='legend-labels'>
+                <li><span style='background:#FFEDA0;'></span>0 &ndash;5000</li>
+                <li><span style='background:#FED976;'></span>5000 &ndash;10000</li>
+                <li><span style='background:#FEB24C;'></span>10000 &ndash;20000</li>
+                <li><span style='background:#FD8D3C;'></span>20000 &ndash;30000</li>
+                <li><span style='background:#FC4E2A;'></span>30000 &ndash;40000</li>
+                <li><span style='background:#E31A1C;'></span>40000 &ndash;50000</li>
+                <li><span style='background:#BD0026;'></span>50000 &ndash;90000</li>
+                <li><span style='background:#800026;'></span>90000 +</li>
+            </ul>
+            </div>
+            <div class='legend-source'>Source: <a href="https://github.com/mickeykedia/Mumbai-Population-Map">Mumbai Population Data Map</a></div>
+            </div>`;
+        }
+
         else if (basemap === 'Population Density (2020)') {
             legend_img.src = 'https://sedac.ciesin.columbia.edu/geoserver/ows?service=WMS&request=GetLegendGraphic&format=image/png&width=15&height=15&layer=gpw-v4:gpw-v4-population-density-adjusted-to-2015-unwpp-country-totals_2020&style=gpw-v4-population-density-adjusted-to-2015-unwpp-country-totals_2020:default&';
             legend_desc.textContent = '{} consists of estimates of human population density based on counts consistent with national census and population registers for the year 2020.'.format(basemap);
         }
+
+
 
         else {
             var basemap_split = basemap.split("_");
