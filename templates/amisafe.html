@@ -1,0 +1,151 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Coast Map
+{% endblock %}
+
+{% block main %}
+<div id="mapPanel" class="col-md-7">
+    <div style="position:relative;">
+        <div id="map_canvas" style="width:100%;height:600px;">
+        </div>
+        <div id="basemaps-wrapper" class="leaflet-bar">
+            <select id="basemaps" ></select>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+
+    <script>
+        // SSP GPP
+    String.prototype.format = function () {
+        var i = 0, args = arguments;
+        return this.replace(/{}/g, function () {
+            return typeof args[i] != 'undefined' ? args[i++] : '';
+        });
+    };
+
+    var lat, lng, intitZoom;
+    
+    var lat = "{{lat}}";
+    var lng = "{{lon}}";
+    var itsxn_dict = JSON.parse('{{itsxn_dict | tojson}}');
+    console.log('itsxn_dict:', itsxn_dict);
+    initZoom = 15;
+
+    var mapElem = document.getElementById('map_canvas');
+    var map = L.map('map_canvas',
+        {
+            minZoom: 2,
+            maxZoom: 15,
+            fullscreenControl: true,
+            maxBounds:L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180)),
+            maxBoundsViscosity: 1.0
+        });
+    map.setView([lat, lng], initZoom);
+    
+    var elev = 1; // create a drop down level of 1m and 2m
+    // add pop up message
+    popupmsg = "<b>Current location</b>: {}, {}. <br><b>Risk</b>: ".format(lat,lng);
+    var popup = L.popup()
+        .setLatLng([lat, lng])
+        .setContent(popupmsg)
+        .openOn(map);
+    
+    var circle_colors = {
+        'red': {'color': '#ff2b2b','desc': 'High risk'}, 
+        'orange':{'color':'#ff8b2b','desc': 'Moderate risk'},
+        'yellow': {'color':'#ffed2b','desc': 'Low risk'},
+        'green': {'color':'#49c928','desc': 'Low risk'}
+    };
+
+    var amisafe_dict = {};
+    for (var elev in itsxn_dict){
+        
+        if (itsxn_dict[elev]['radius1'] === 'True'){
+            var rad1_col = 'red';
+            var rad2_col = 'red';
+        }
+
+        else {
+            if (itsxn_dict[elev]['radius2'] === 'True'){
+                var rad1_col = 'yellow';
+                var rad2_col = 'yellow';
+            }
+        }
+
+    }
+
+    // add radius
+    var circle_50 = L.circle([lat, lng], {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.4,
+        radius: 50
+    }).addTo(map);
+
+    // add radius
+    var circle_100 = L.circle([lat, lng], {
+        color: 'orange',
+        fillColor: '#ff8b2b',
+        fillOpacity: 0.4,
+        radius: 100
+    }).addTo(map);
+
+    (function() {
+        var elm = document.getElementById('basemaps'),
+            df = document.createDocumentFragment();
+        
+        var options_list = ['1 meters', '2 meters'];
+        for (var j = 0; j < options_list.length; j++){
+            var option = document.createElement('option');
+            option.value = options_list[j];
+            option.appendChild(document.createTextNode(options_list[j]));
+            df.appendChild(option);
+        }
+
+        elm.appendChild(df);
+    }());
+
+    var layer = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png').addTo(map);
+
+    document
+        .querySelector('#basemaps')
+        .addEventListener('change', function (e) {
+            //$('#myModal').modal();
+            //e.target.value = 'OpenStreetMap';
+            
+            var basemap = e.target.value;
+            setBasemap(basemap);
+            updateLegend(basemap);
+        });
+    
+    var isColorFloodMap;
+    var fmTileUrl = 'https://www.floodmap.net/getFMTile.ashx?x={x}&y={y}&z={z}&e=';
+    var floodLayer = L.tileLayer(fmTileUrl + elev, {
+        attribution: '© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors,<a href="https://www.mapzen.com/rights">Mapzen</a>, <a href = "https://floodmap.net">Floodmap.net</a>',
+        opacity: 0.5
+    });
+
+    map.addLayer(floodLayer);
+
+    function refresh(elev) {
+        floodLayer.setUrl(fmTileUrl + elev);
+        floodLayer.bringToFront();
+    }
+
+    function setBasemap(basemap) {
+        if (basemap === '1 meters') {
+            refresh(1);
+        }
+
+        else if (basemap === '2 meters') {
+            refresh(2);
+        }
+    }
+
+</script>
+
+{% endblock %}

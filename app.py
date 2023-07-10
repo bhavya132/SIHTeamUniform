@@ -1,10 +1,9 @@
-import re
 from datetime import datetime
-import base64
 import pandas as pd
 from flask import Flask, render_template, request
 import firebase_admin
 from firebase_admin import credentials, firestore, storage
+import amisafe
 
 cred_obj = credentials.Certificate('floodbase.json')
 default_app = firebase_admin.initialize_app(cred_obj, {
@@ -69,6 +68,17 @@ def my_map():
 
     return render_template("coastmap.html",flooded_results = flooded_results, mumbai_dict=mumbai_dict)
     # return render_template("my_map.html")
+
+@app.route("/amisafe", methods=["POST"])
+def am_i_safe():
+    coord = request.form.get("coord")
+    print(f'coord {coord}')
+    lat, lon = coord.split(',')
+    lat, lon = float(lat.strip()), float(lon.strip())
+    ais = amisafe.AmISafe(lat_deg=lat,lon_deg=lon,zoom=15)
+    itsxn_dict = ais.check_intersection(e1 = 1, e2 = 2,r1_meters = 50, r2_meters = 100, plot = False)
+    print(f'itersection: {itsxn_dict}')
+    return render_template("amisafe.html", lat=lat, lon=lon, itsxn_dict=itsxn_dict)
 
 @app.route("/floodmap")
 def test_floodmap():

@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Index
+    Coast Map
 {% endblock %}
 
 {% block main %}
@@ -10,10 +10,20 @@
     <div class="row">
         
         <div id="setElev" class="form-group form-inline" >
-            <label>Elevation/Height/Water Level (-/+):</label>
+            <label>Simulated sea level (-/+):</label>
         <input class="form-control" type="text" id="elev" style="width:100px;" value="0" />
         <button class="btn btn-warning" style="width:100px;" type="button" onclick="setElev(document.getElementById('elev').value);">Set</button>&nbsp;&nbsp;<b><span id="curElev" style="color:red;"></span><span style="color:red;"> meter.</span></b><br />
         </div>
+                
+    </div>
+
+    <div class="row">
+        
+        <form action="/amisafe" method="post">
+            <label>Check location: </label>
+            <input class="form-control" autocomplete="off" id="amisafe" autofocus name="coord" value="19.090866, 72.831018" style="width:150px;" type="text">
+            <button class="btn btn-warning" style="width:100px;" type="submit">Am I Safe</button>
+        </form>
                 
     </div>
 
@@ -34,7 +44,7 @@
     <div class="rowlegend">
         <div class="column">
             <h3 class="panel-title"><b>Legend</b></h3>
-            <img src="C:/Users/PAKHUIYING/Documents/Programming/SIHTeamUniform/flood_image/colorbar.png" id="legend">
+            <img src="" id="legend">
         </div>
         <div class="column">
             <h4 class="panel-title"><b>Description</b></h4>
@@ -513,7 +523,8 @@
     (function() {
         var elm = document.getElementById('basemaps'),
             df = document.createDocumentFragment();
-        var options_list = ['OpenStreetMap',"OpenTopoMap",'Mumbai Population Density',"Crowd-Sourced Photos",'Land use','Mumbai vulnerability map','Land subsidence','Topography','Road network map','Historical flood map','Global vulnerability map'];
+        // var options_list = ['OpenStreetMap',"OpenTopoMap",'Mumbai Population Density',"Crowd-Sourced Photos",'Land use','Mumbai vulnerability map','Land subsidence','Topography','Road network map','Historical flood map','Global vulnerability map'];
+        var options_list = ['Basemap','Mumbai Population Density','Land use','Mumbai vulnerability map','Land subsidence','Topography','Historical flood map',"Crowd-Sourced Photos"];
         for (var j = 0; j < options_list.length; j++){
             var option = document.createElement('option');
             option.value = options_list[j];
@@ -639,10 +650,12 @@
         return data;
     }
 
-    var layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    // var layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    var layer = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png').addTo(map);
     var mumbai_popn_density = false; //initialised to undefined by default
     var mumbai_landuse = false;
     var global_vulnerability_map = false;
+    let crowd_sourced_photos = [];
     var vulnerability_map;
     var svg_landuse;
     var layerLabels;
@@ -661,7 +674,7 @@
     var isColorFloodMap;
     var fmTileUrl = 'https://www.floodmap.net/getFMTile.ashx?x={x}&y={y}&z={z}&e=';
     var floodLayer = L.tileLayer(fmTileUrl + elev, {
-        attribution: '© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors,<a href="https://www.mapzen.com/rights">Mapzen</a>, <a href = "https://floodmap.net">Floodmap.net</a>, <a href = "https://sedac.ciesin.columbia.edu/">SEDAC</a>',
+        attribution: '© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors,<a href="https://www.mapzen.com/rights">Mapzen</a>, <a href = "https://floodmap.net">Floodmap.net</a>, <a href = "https://github.com/akshaykore/mumdata/">Akshay Kore</a>',
         opacity: 0.5
     })
     // var searchControl = L.esri.Geocoding.geosearch({ useMapBounds: 20, expanded:true }).addTo(map);
@@ -781,11 +794,23 @@
 
     
     function setBasemap(basemap) {
-        if (basemap === 'OpenStreetMap') {
-            if (layer) {
-                map.removeLayer(layer);
+        if (basemap === 'Basemap') {
+            if (mumbai_popn_density) {
+                map.removeLayer(geojson);
+                mumbai_popn_density = false;
             }
-            layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+            if (vulnerability_map) {
+                map.removeLayer(vulnerability_map);
+            }
+
+            if (crowd_sourced_photos.length > 1) {
+                for (var i = 0; i < crowd_sourced_photos.length; i++) {
+                    map.removeLayer(crowd_sourced_photos[i]);
+                }
+                crowd_sourced_photos = [];
+            }
+
             if (!isColorFloodMap)
                 floodLayer.bringToFront();
         }
@@ -794,6 +819,7 @@
             if (layer) {
                 map.removeLayer(layer);
             }
+            //'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
             layer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
                 attribution: ' SRTM | Base Map: © <a href="http://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
             }).addTo(map);
@@ -885,7 +911,7 @@
 
                 const flood_icon = L.icon({
                     iconUrl: icon_url,
-                    iconSize: [32, 37],
+                    iconSize: [25, 41],
                     iconAnchor: [16, 37],
                     popupAnchor: [0, -28]
                 });
@@ -916,6 +942,8 @@
                         }
                     }
                 }).addTo(map);
+
+                crowd_sourced_photos.push(coorsLayer);
             }
 
             if (!isColorFloodMap)
