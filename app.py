@@ -35,13 +35,6 @@ def main():
     print(flooded_results)
     return render_template("index.html",flooded_results = flooded_results)
 
-@app.route("/hello/<name>")
-def hello_there(name = None):
-    return render_template(
-        "hello_there.html",
-        name=name,
-        date=datetime.now()
-    )
 
 @app.route("/test")
 def test_georaster():

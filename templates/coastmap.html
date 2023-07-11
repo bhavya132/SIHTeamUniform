@@ -524,7 +524,7 @@
         var elm = document.getElementById('basemaps'),
             df = document.createDocumentFragment();
         // var options_list = ['OpenStreetMap',"OpenTopoMap",'Mumbai Population Density',"Crowd-Sourced Photos",'Land use','Mumbai vulnerability map','Land subsidence','Topography','Road network map','Historical flood map','Global vulnerability map'];
-        var options_list = ['Basemap','Mumbai Population Density','Land use','Mumbai vulnerability map','Land subsidence','Topography','Historical flood map',"Crowd-Sourced Photos"];
+        var options_list = ['Basemap','Population density','Land use','Land subsidence','Topography','2005 Mumbai flood',"Crowd-Sourced Photos",'Vulnerability index', 'Vulnerability classification'];
         for (var j = 0; j < options_list.length; j++){
             var option = document.createElement('option');
             option.value = options_list[j];
@@ -827,7 +827,7 @@
                 floodLayer.bringToFront();
         }
 
-        else if (basemap === 'Mumbai Population Density') {
+        else if (basemap === 'Population density') {
             // if (mumbai_layer) {
             //     map.removeLayer(mumbai_layer);
             // }
@@ -998,7 +998,7 @@
                 floodLayer.bringToFront();
         }
 
-        else if (basemap === 'Historical flood map') {
+        else if (basemap === '2005 Mumbai flood') {
             if (mumbai_popn_density) {
                 map.removeLayer(geojson);
                 mumbai_popn_density = false;
@@ -1024,7 +1024,7 @@
                 floodLayer.bringToFront();
         }
 
-        else if (basemap === 'Mumbai vulnerability map') {
+        else if (basemap === 'Vulnerability index') {
             if (mumbai_popn_density) {
                 map.removeLayer(geojson);
                 mumbai_popn_density = false;
@@ -1044,7 +1044,31 @@
             var nelat = mumbai_vulnerability_map['vulnerability_index']['UL'][0];
             var nelong = mumbai_vulnerability_map['vulnerability_index']['LR'][1];
             const latLngBounds = L.latLngBounds([[nelat, nelong], [swlat, swlong]]);
-            var imageUrl = mumbai_vulnerability_map['vulnerability_index']["url"];
+            var imageUrl = "https://live.staticflickr.com/65535/53037585656_aae07f56f1_o.png";
+            vulnerability_map = L.imageOverlay(imageUrl, latLngBounds).addTo(map);
+            
+            map.flyTo([19.102, 72.85], 11);
+
+            if (!isColorFloodMap)
+                floodLayer.bringToFront();
+        }
+
+        else if (basemap === 'Vulnerability classification') {
+            if (mumbai_popn_density) {
+                map.removeLayer(geojson);
+                mumbai_popn_density = false;
+            }
+
+            if (vulnerability_map) {
+                map.removeLayer(vulnerability_map);
+            }
+
+            var swlat = mumbai_vulnerability_map['vulnerability_index']['LR'][0];
+            var swlong = mumbai_vulnerability_map['vulnerability_index']['UL'][1];
+            var nelat = mumbai_vulnerability_map['vulnerability_index']['UL'][0];
+            var nelong = mumbai_vulnerability_map['vulnerability_index']['LR'][1];
+            const latLngBounds = L.latLngBounds([[nelat, nelong], [swlat, swlong]]);
+            var imageUrl = "https://live.staticflickr.com/65535/53037033252_7a3f233d46_o.png";
             vulnerability_map = L.imageOverlay(imageUrl, latLngBounds).addTo(map);
             
             map.flyTo([19.102, 72.85], 11);
