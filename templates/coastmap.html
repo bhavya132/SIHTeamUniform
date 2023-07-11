@@ -22,7 +22,7 @@
         <form action="/amisafe" method="post">
             <label>Check location: </label>
             <input class="form-control" autocomplete="off" id="amisafe" autofocus name="coord" value="19.090866, 72.831018" style="width:150px;" type="text">
-            <button class="btn btn-warning" style="width:100px;" type="submit">Am I Safe</button>
+            <button id="amisafeEntry" class="btn btn-warning" style="width:100px;" type="submit">Am I Safe</button>
         </form>
                 
     </div>
@@ -44,13 +44,13 @@
     <div class="rowlegend">
         <div class="column">
             <h3 class="panel-title"><b>Legend</b></h3>
-            <img src="" id="legend">
+            <img src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' id="legend">
         </div>
-        <div class="column">
+        <!-- <div class="column">
             <h4 class="panel-title"><b>Description</b></h4>
             <p id="legend_desc">OpenStreetMap - geospatial data which features roads and street data</p>
             <div class="landuselegend"></div>
-        </div>
+        </div> -->
         
     </div>
     
@@ -715,10 +715,12 @@
 
     map.on("zoom", function (e) {
         updateLink();
+        updateAMISAFE();
     })
 
     map.on("move", function (e) {
         updateLink();
+        updateAMISAFE();
     })
 
     
@@ -790,6 +792,11 @@
         var lngUrl = "";
         document.getElementById("link").value = "Map center: Latitude:" + Math.round(center.lat * 1000000) / 1000000 + ", Longitude: " + Math.round(center.lng * 1000000) / 1000000 + ", Zoom level: " + map.getZoom() + ", Simulated Sea Level: " + elev;
         
+    }
+
+    function updateAMISAFE(){
+        center = map.getCenter();
+        document.getElementById("amisafeEntry").value =  Math.round(center.lat * 1000000) / 1000000 + ',' + Math.round(center.lng * 1000000) / 1000000;
     }
 
     
@@ -1215,78 +1222,97 @@
         return legend_desc;
     }
 
+    legend_imgs = {
+        'Basemap': 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+        'Population density': "https://live.staticflickr.com/65535/53037896916_d0535749df_o.png",
+        'Land use': "https://live.staticflickr.com/65535/53037319537_59106904dd_o.png",
+        'Land subsidence': "https://live.staticflickr.com/65535/53038383823_0580c886ba_o.png",
+        'Topography': "https://live.staticflickr.com/65535/53037896931_77802e80a5_o.png",
+        '2005 Mumbai flood': 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+        "Crowd-Sourced Photos": 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+        'Vulnerability index': "https://live.staticflickr.com/65535/53037319522_c2a141c886_o.png",
+        'Vulnerability classification':"https://live.staticflickr.com/65535/53037175697_8545f2a21a_o.png"
+    }
     function updateLegend(basemap) {
         var legend_img = document.getElementById('legend');
-        var legend_desc = document.getElementById('legend_desc');
+        legend_img.src = legend_imgs[basemap];
+    };
+        // var legend_desc = document.getElementById('legend_desc');
 
-        if (basemap === 'OpenStreetMap') {
-            legend_img.src = null;
-        }
+        // if (basemap === 'OpenStreetMap') {
+        //     legend_img.src = null;
+        // }
 
-        else if (basemap === 'OpenTopoMap') {
-            legend_img.src = null;
-            legend_desc.textContent = '{} is a free topographic map generated from OpenStreetMap data and SRTM elevation data. The map style is based on the official maps and focuses on good readability through high contrast and balanced signatures.'.format(basemap);
-        }
+        // else if (basemap === 'OpenTopoMap') {
+        //     legend_img.src = null;
+        //     legend_desc.textContent = '{} is a free topographic map generated from OpenStreetMap data and SRTM elevation data. The map style is based on the official maps and focuses on good readability through high contrast and balanced signatures.'.format(basemap);
+        // }
 
-        else if (basemap === 'Land use') {
-            legend_img.src = null;
-            legend_desc.textContent = null;
+        // else if (basemap === 'Land use') {
+        //     legend_img.src = "https://live.staticflickr.com/65535/53037319537_01beda9b69_o.png";
+        //     // legend_desc.textContent = null;
 
-            var miniClass = document.querySelector('.landuselegend');
-            miniClass.innerHTML = ``;
-            function showLegend() {
-                for (let i = 0; i < legenddata.length; i++){
-                    if (legenddata[i]['type'] === "static"){
-                        var legend_uri = legenddata[i]['legend'];
-                        var legend_description = legenddata[i]['name'];
-                        miniClass.innerHTML +=  ` <img src="${legend_uri}"> ${legend_description} <br>`;
-                    }
-                }
-            }
+        //     // var miniClass = document.querySelector('.landuselegend');
+        //     // miniClass.innerHTML = ``;
+        //     // function showLegend() {
+        //     //     for (let i = 0; i < legenddata.length; i++){
+        //     //         if (legenddata[i]['type'] === "static"){
+        //     //             var legend_uri = legenddata[i]['legend'];
+        //     //             var legend_description = legenddata[i]['name'];
+        //     //             miniClass.innerHTML +=  ` <img src="${legend_uri}"> ${legend_description} <br>`;
+        //     //         }
+        //     //     }
+        //     // }
 
-            showLegend();
+        //     // showLegend();
 
-        }
-
-        else if (basemap === 'Mumbai Population Density') {
-            legend_img.src = null;
-            legend_desc.textContent = null;
-
-            var miniClass = document.querySelector('.landuselegend');
-            miniClass.innerHTML = ``;
-            miniClass.innerHTML = `<div class='my-legend'>
-            <div class='legend-title'>Mumbai Population Density (people / km<sup>2</sup> (2011))</div>
-            <div class='legend-scale'>
-            <ul class='legend-labels'>
-                <li><span style='background:#FFEDA0;'></span>0 &ndash;5000</li>
-                <li><span style='background:#FED976;'></span>5000 &ndash;10000</li>
-                <li><span style='background:#FEB24C;'></span>10000 &ndash;20000</li>
-                <li><span style='background:#FD8D3C;'></span>20000 &ndash;30000</li>
-                <li><span style='background:#FC4E2A;'></span>30000 &ndash;40000</li>
-                <li><span style='background:#E31A1C;'></span>40000 &ndash;50000</li>
-                <li><span style='background:#BD0026;'></span>50000 &ndash;90000</li>
-                <li><span style='background:#800026;'></span>90000 +</li>
-            </ul>
-            </div>
-            <div class='legend-source'>Source: <a href="https://github.com/mickeykedia/Mumbai-Population-Map">Mumbai Population Data Map</a></div>
-            </div>`;
-        }
-
-        else if (basemap === 'Population Density (2020)') {
-            legend_img.src = 'https://sedac.ciesin.columbia.edu/geoserver/ows?service=WMS&request=GetLegendGraphic&format=image/png&width=15&height=15&layer=gpw-v4:gpw-v4-population-density-adjusted-to-2015-unwpp-country-totals_2020&style=gpw-v4-population-density-adjusted-to-2015-unwpp-country-totals_2020:default&';
-            legend_desc.textContent = '{} consists of estimates of human population density based on counts consistent with national census and population registers for the year 2020.'.format(basemap);
-        }
+        // }
 
 
+        // else if (basemap === 'Mumbai Population Density') {
+        //     legend_img.src = null;
+        //     legend_desc.textContent = null;
 
-        else {
-            var basemap_split = basemap.split("_");
-            var ssp_type = basemap_split[0];
-            var ssp_year = Number(basemap_split[1]);
-            legend_img.src = ssp_gpp[ssp_type][ssp_year]['uri'];
-            legend_desc.textContent = sspDescription(ssp_type, ssp_year);
-        }
-    }
+        //     var miniClass = document.querySelector('.landuselegend');
+        //     miniClass.innerHTML = ``;
+        //     miniClass.innerHTML = `<div class='my-legend'>
+        //     <div class='legend-title'>Mumbai Population Density (people / km<sup>2</sup> (2011))</div>
+        //     <div class='legend-scale'>
+        //     <ul class='legend-labels'>
+        //         <li><span style='background:#FFEDA0;'></span>0 &ndash;5000</li>
+        //         <li><span style='background:#FED976;'></span>5000 &ndash;10000</li>
+        //         <li><span style='background:#FEB24C;'></span>10000 &ndash;20000</li>
+        //         <li><span style='background:#FD8D3C;'></span>20000 &ndash;30000</li>
+        //         <li><span style='background:#FC4E2A;'></span>30000 &ndash;40000</li>
+        //         <li><span style='background:#E31A1C;'></span>40000 &ndash;50000</li>
+        //         <li><span style='background:#BD0026;'></span>50000 &ndash;90000</li>
+        //         <li><span style='background:#800026;'></span>90000 +</li>
+        //     </ul>
+        //     </div>
+        //     <div class='legend-source'>Source: <a href="https://github.com/mickeykedia/Mumbai-Population-Map">Mumbai Population Data Map</a></div>
+        //     </div>`;
+        // }
+
+        // else if (basemap === 'Population density') {
+        //     // legend_img.src = 'https://sedac.ciesin.columbia.edu/geoserver/ows?service=WMS&request=GetLegendGraphic&format=image/png&width=15&height=15&layer=gpw-v4:gpw-v4-population-density-adjusted-to-2015-unwpp-country-totals_2020&style=gpw-v4-population-density-adjusted-to-2015-unwpp-country-totals_2020:default&';
+        //     legend_img.src = "https://live.staticflickr.com/65535/53037896916_d0535749df_o.png";
+        //     // legend_desc.textContent = '{} consists of estimates of human population density based on counts consistent with national census and population registers for the year 2020.'.format(basemap);
+        // }
+
+        // else if (basemap === 'Vulnerability classification') {
+        //     legend_img.src = "https://live.staticflickr.com/65535/53037175697_8545f2a21a_o.png";
+        //     // legend_desc.textContent = 'High risk areas accounts for aras that are subsiding, high population density and low lying areas that are below mean sea level';
+        // }
+
+
+
+        // else {
+        //     var basemap_split = basemap.split("_");
+        //     var ssp_type = basemap_split[0];
+        //     var ssp_year = Number(basemap_split[1]);
+        //     legend_img.src = ssp_gpp[ssp_type][ssp_year]['uri'];
+        //     legend_desc.textContent = sspDescription(ssp_type, ssp_year);
+        // }
 
     
 

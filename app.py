@@ -38,11 +38,25 @@ def main():
 
 @app.route("/test")
 def test_georaster():
-    mumbai_land_sub_fp = r'mumbai_land_subsidence_clipped.tif'
-    # with open(mumbai_land_sub_fp, "rb") as image_file:
-    #     encoded_string = base64.b64encode(image_file.read())
+    result = db.collection('floods').stream()
+    flooded_results = dict()
+    if result:
+        for i,r in enumerate(result):
+            db_result = r.to_dict()
+            if ('flood' in list(db_result)) and (db_result['flood'] is True):
+                flooded_results[i] = db_result
+    print(flooded_results)
 
-    return render_template("load-via-script-tag.html",mumbai_land_sub_fp=mumbai_land_sub_fp)
+    df = pd.read_csv('https://gist.githubusercontent.com/mickeykedia/9d9144072c5f637c26995569dd347614/raw/b65134846607235adf4ad6498713deed77d3b4b5/ward_level_collated.csv')
+    df_cropped = df.loc[:,['Ward_Alphabet','Ward_Names','TOT_P_DEN']].set_index(['Ward_Alphabet'])
+    mumbai_dict = df_cropped.to_dict('index')
+
+    return render_template("my_map.html",flooded_results = flooded_results, mumbai_dict=mumbai_dict)
+    # mumbai_land_sub_fp = r'mumbai_land_subsidence_clipped.tif'
+    # # with open(mumbai_land_sub_fp, "rb") as image_file:
+    # #     encoded_string = base64.b64encode(image_file.read())
+
+    # return render_template("load-via-script-tag.html",mumbai_land_sub_fp=mumbai_land_sub_fp)
 
 @app.route("/my_map")
 def my_map():
