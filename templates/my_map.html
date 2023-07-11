@@ -11,39 +11,99 @@
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
       <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,600,700' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/jquery.mobile-1.4.5.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/floating-submit.css')}}" />
+        
         <script src="{{ url_for('static',filename='js/jquery.js')}}"></script>
         <script src="{{ url_for('static',filename='js/jquery.mobile-1.4.5.js')}}"></script>
-        <script src="{{ url_for('static',filename='js/map.js')}}"></script>
-        <!-- Load Leaflet from CDN -->
+        <!-- <script src="{{ url_for('static',filename='js/map.js')}}"></script> -->
+
+      <!-- <script src="{{ url_for('static',filename='js/trial.js')}}"></script> -->
+      <!-- <script type="text/javascript" src="{{ url_for('static',filename='js/dropdown.js')}}"></script> -->
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/UI.css')}}">
+        <!-- <script type="text/javascript" src="{{ url_for('static',filename='js/UI.js')}}"></script> -->
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/dropdown.css')}}">
+      <!-- Load Leaflet from CDN -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+            
+            <!-- Load Esri Leaflet from CDN -->
+        <script src="https://unpkg.com/esri-leaflet@2.3.2/dist/esri-leaflet.js"
+        integrity="sha512-6LVib9wGnqVKIClCduEwsCub7iauLXpwrd5njR2J507m3A2a4HXJDLMiSZzjcksag3UluIfuW1KzuWVI5n/cuQ=="
+        crossorigin=""></script>
+        <!-- Load Esri Leaflet Geocoder from CDN -->
+        <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.2/dist/esri-leaflet-geocoder.css"
+            integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+            crossorigin="">
+
+            <script src="https://unpkg.com/leaflet-image@latest/leaflet-image.js"></script>
+
         <script src="https://unpkg.com/topojson@3.0.2/dist/topojson.min.js"></script>
         <!--Leaflet Foolscreen -->
         <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
         <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
-
-      <script src="{{ url_for('static',filename='js/trial.js')}}"></script>
-      <script type="text/javascript" src="{{ url_for('static',filename='js/dropdown.js')}}"></script>
-      <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/UI.css')}}">
-        <script type="text/javascript" src="{{ url_for('static',filename='js/UI.js')}}"></script>
-      <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/dropdown.css')}}">
-      <script>
+      <!-- <script>
         var h = ($( window ).height());
         $(document).ready(function(){
             $("#map").css({"height" : h, "width" : "100%"});
             });
-    </script>
-      
+    </script> -->
+      <script>
+        String.prototype.format = function () {
+            var i = 0, args = arguments;
+            return this.replace(/{}/g, function () {
+                return typeof args[i] != 'undefined' ? args[i++] : '';
+            });
+        };
+      </script>
       
 
   </head>
   <body>
+        <div id="map" style="width:100%;height:700px;"></div>
         <div id="floating-dropdown"><div id="dd" class="wrapper-dropdown-5" tabindex="1"><img src="{{ url_for('static',filename='img/mumdatafull.svg')}}" height="30"  align="top" style="padding-top:10px;" >
-            <select class="wrapper-dropdown-5" id="basemaps" ></select>
-            
-        </div>
+            <select class="wrapper-dropdown-5" id="basemaps" ></select> 
+            </div>
         </div>
         <div class="control-center" id="centermap" title = 'Click to recenter the map'>Center Map</div>
+        <!-- floating form -->
+        <div class="floating-contact-form">
+            <div class="form-container">
+              <h3>We'd love to hear from you</h3>
+      
+              <form action="#">
+                <div class="field-container">
+                  <i class="fas fa-signature"></i>
+                  <label for="name">Name</label>
+                  <input class="form-input" type="text" id="name" />
+                </div>
+      
+                <div class="field-container">
+                  <i class="fas fa-envelope"></i>
+                  <label for="email">Email</label>
+                  <input class="form-input" type="text" id="email" />
+                </div>
+      
+                <div class="field-container">
+                  <i class="far fa-sticky-note"></i>
+                  <label for="message">Message</label>
+                  <textarea
+                    class="form-input"
+                    id="message"
+                    cols="30"
+                    rows="10"
+                  ></textarea>
+                </div>
+      
+                <input type="submit" value="Send" />
+              </form>
+            </div>
+      
+            <div class="contact-icon">
+              <i class="fas fa-comments"></i>
+            </div>
+          </div>
+          <script src="{{ url_for('static',filename='js/floating-form.js')}}"></script>
+          
 
       <script>
         (function() {
@@ -68,13 +128,19 @@
                 var basemap = e.target.value;
                 setBasemap(basemap);
             });
+        
+        var mapCenter = [19.0861289, 72.90870667];
+        var mapZoom = 11;
+        document.getElementById("centermap").addEventListener('click', function() {
+                map.flyTo(mapCenter, mapZoom);
+            });
 
             var lat, lng, initZoom;
             lat = 20;
             lng = -10;
             initZoom = 3;
                 
-            var mapElem = document.getElementById('map');
+            // var mapElem = document.getElementById('map');
             var map = L.map('map',
                 {
                     minZoom: 2,
@@ -177,10 +243,19 @@
                 return data;
             }
 
-            document.getElementById("centermap").addEventListener('click', function() {
-                map.flyTo([19.0861289, 72.90870667], 11);
-            });
+            var leaflet_color_icon = {
+                'yellow': "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png",
+                'orange': "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png",
+                'red': "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png"
+            };
             
+            var mumbai_vulnerability_map = {
+                'vulnerability_index': {
+                    "url": "https://live.staticflickr.com/65535/53031989345_4670c818d6_o.png",
+                    "UL": [19.343, 72.672],
+                    "LR": [18.832, 73.1697]
+                }
+            };
 
             function setBasemap(basemap) {
                 if (basemap === 'Basemap') {
@@ -221,7 +296,7 @@
                     
                     // console.log('geojson bounds:',geojson.getBounds());
                     // map.fitBounds(geojson.getBounds());
-                    map.flyTo([19.102, 72.85], 11);
+                    map.flyTo(mapCenter, mapZoom);
                     
                     floodLayer.bringToFront();
                 }
@@ -245,7 +320,7 @@
                     // var imageUrl = urlbase + "all.png";
                     var imageUrl = "https://live.staticflickr.com/65535/53033153700_03d4f79dbc_o.png";
                     vulnerability_map = L.imageOverlay(imageUrl, latLngBounds).addTo(map);
-                    map.flyTo([19.102, 72.85], 11);
+                    map.flyTo(mapCenter, mapZoom);
                     // mumbai_landuse = true;
 
                     floodLayer.bringToFront();
@@ -339,7 +414,7 @@
                     // var imageUrl = urlbase + "all.png";
                     var imageUrl = "http://akshaykore.github.io/mumdata/layers/26july2.gif";
                     vulnerability_map = L.imageOverlay(imageUrl, latLngBounds).addTo(map);
-                    map.flyTo([19.102, 72.85], 11);
+                    map.flyTo(mapCenter, mapZoom);
                     // mumbai_landuse = true;
 
                     floodLayer.bringToFront();
@@ -363,7 +438,7 @@
                     var imageUrl = "https://live.staticflickr.com/65535/53037585656_aae07f56f1_o.png";
                     vulnerability_map = L.imageOverlay(imageUrl, latLngBounds).addTo(map);
                     
-                    map.flyTo([19.102, 72.85], 11);
+                    map.flyTo(mapCenter, mapZoom);
 
                     floodLayer.bringToFront();
                 }
@@ -386,7 +461,7 @@
                     var imageUrl = "https://live.staticflickr.com/65535/53037033252_7a3f233d46_o.png";
                     vulnerability_map = L.imageOverlay(imageUrl, latLngBounds).addTo(map);
                     
-                    map.flyTo([19.102, 72.85], 11);
+                    map.flyTo(mapCenter, mapZoom);
 
                     floodLayer.bringToFront();
                 }
@@ -409,7 +484,7 @@
                     var imageUrl = "https://live.staticflickr.com/65535/53033381678_8465947f43_o.png";
                     vulnerability_map = L.imageOverlay(imageUrl, latLngBounds).addTo(map);
                     
-                    map.flyTo([19.102, 72.85], 11);
+                    map.flyTo(mapCenter, mapZoom);
 
                     floodLayer.bringToFront();
                 }
@@ -432,7 +507,7 @@
                     var imageUrl = "https://live.staticflickr.com/65535/53033381658_152351a299_o.png";
                     vulnerability_map = L.imageOverlay(imageUrl, latLngBounds).addTo(map);
                     
-                    map.flyTo([19.102, 72.85], 11);
+                    map.flyTo(mapCenter, mapZoom);
 
                     floodLayer.bringToFront();
                 }
