@@ -1,110 +1,56 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <title>Mumbai Data</title>
+{% extends "layout.html" %}
 
-      <link rel="icon" 
-      type="image/png" 
-      href="{{ url_for('static',filename='img/icoblack32.ico')}}">
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-      <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,600,700' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/jquery.mobile-1.4.5.css')}}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/floating-submit.css')}}" />
-        
-        <script src="{{ url_for('static',filename='js/jquery.js')}}"></script>
-        <script src="{{ url_for('static',filename='js/jquery.mobile-1.4.5.js')}}"></script>
-        <!-- <script src="{{ url_for('static',filename='js/map.js')}}"></script> -->
+{% block title %}
+    Flood Simulator
+{% endblock %}
 
-      <!-- <script src="{{ url_for('static',filename='js/trial.js')}}"></script> -->
-      <!-- <script type="text/javascript" src="{{ url_for('static',filename='js/dropdown.js')}}"></script> -->
-      <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/UI.css')}}">
-        <!-- <script type="text/javascript" src="{{ url_for('static',filename='js/UI.js')}}"></script> -->
-      <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/dropdown.css')}}">
-      <!-- Load Leaflet from CDN -->
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-            
-            <!-- Load Esri Leaflet from CDN -->
-        <script src="https://unpkg.com/esri-leaflet@2.3.2/dist/esri-leaflet.js"
-        integrity="sha512-6LVib9wGnqVKIClCduEwsCub7iauLXpwrd5njR2J507m3A2a4HXJDLMiSZzjcksag3UluIfuW1KzuWVI5n/cuQ=="
-        crossorigin=""></script>
-        <!-- Load Esri Leaflet Geocoder from CDN -->
-        <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.2/dist/esri-leaflet-geocoder.css"
-            integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
-            crossorigin="">
-
-            <script src="https://unpkg.com/leaflet-image@latest/leaflet-image.js"></script>
-
-        <script src="https://unpkg.com/topojson@3.0.2/dist/topojson.min.js"></script>
-        <!--Leaflet Foolscreen -->
-        <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
-        <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
-      <!-- <script>
-        var h = ($( window ).height());
-        $(document).ready(function(){
-            $("#map").css({"height" : h, "width" : "100%"});
-            });
-    </script> -->
-      <script>
-        String.prototype.format = function () {
-            var i = 0, args = arguments;
-            return this.replace(/{}/g, function () {
-                return typeof args[i] != 'undefined' ? args[i++] : '';
-            });
-        };
-      </script>
-      
-
-  </head>
-  <body>
+{% block main %}
+        <!-- leaflet map container -->
         <div id="map" style="width:100%;height:700px;"></div>
+        <!-- dropdown list -->
         <div id="floating-dropdown"><div id="dd" class="wrapper-dropdown-5" tabindex="1"><img src="{{ url_for('static',filename='img/mumdatafull.svg')}}" height="30"  align="top" style="padding-top:10px;" >
             <select class="wrapper-dropdown-5" id="basemaps" ></select> 
             </div>
         </div>
         <div class="control-center" id="centermap" title = 'Click to recenter the map'>Center Map</div>
-        <!-- floating form -->
+        
+        <!-- Simulate flood -->
+        <div class="floating-elev" title="Enter flood levels in meters">
+            <div class="elev-container">
+                <h3><i class="fa-solid fa-water"></i> Simulate Flood Level</h3>
+                <div id="setElev" class="field-container" >  
+                    <input class="form-input" title="Enter flood levels in meters" autocomplete="off" autofocus type="text" id="elev" value="0" />
+                </div>
+                <input type="button" onclick="setElev(document.getElementById('elev').value);" value="Set"/>
+              </div>
+        </div>
+        
+        <!-- floating form for AMISAFE -->
         <div class="floating-contact-form">
             <div class="form-container">
-              <h3>We'd love to hear from you</h3>
-      
-              <form action="#">
+              <h3>Enter Location</h3>
+              <form action="/amisafe" method="post">
                 <div class="field-container">
-                  <i class="fas fa-signature"></i>
-                  <label for="name">Name</label>
-                  <input class="form-input" type="text" id="name" />
+                    <i class="fa-solid fa-location-crosshairs"></i>
+                  <input class="form-input" autocomplete="off" id="amisafe" title="Enter coordinates (lat, lon) in degrees" autofocus name="coord" value="19.090866, 72.831018" type="text">
                 </div>
-      
-                <div class="field-container">
-                  <i class="fas fa-envelope"></i>
-                  <label for="email">Email</label>
-                  <input class="form-input" type="text" id="email" />
-                </div>
-      
-                <div class="field-container">
-                  <i class="far fa-sticky-note"></i>
-                  <label for="message">Message</label>
-                  <textarea
-                    class="form-input"
-                    id="message"
-                    cols="30"
-                    rows="10"
-                  ></textarea>
-                </div>
-      
-                <input type="submit" value="Send" />
+                <!-- <button style="width:100px;" type="submit">Am I Safe</button> -->
+                <input type="submit" value="Am I Safe" />
               </form>
             </div>
       
-            <div class="contact-icon">
-              <i class="fas fa-comments"></i>
+            <div class="contact-icon" title="Check your location for your flood risk">
+                <i class="fa-solid fa-shield-heart"></i>
+                <!-- <h3>AM I SAFE</h3> -->
             </div>
+                <h3>AM I SAFE</h3>
           </div>
-          <script src="{{ url_for('static',filename='js/floating-form.js')}}"></script>
-          
 
+          <script src="{{ url_for('static',filename='js/floating-form.js')}}"></script>
+          <!-- <script src="{{ url_for('static',filename='js/floating-elev.js')}}"></script> -->
+{% endblock %}          
+
+{% block javascript %}
       <script>
         (function() {
             var elm = document.getElementById('basemaps'),
@@ -128,41 +74,74 @@
                 var basemap = e.target.value;
                 setBasemap(basemap);
             });
-        
+            
+
+        var elev = document.getElementById('elev').value;
         var mapCenter = [19.0861289, 72.90870667];
         var mapZoom = 11;
+
         document.getElementById("centermap").addEventListener('click', function() {
                 map.flyTo(mapCenter, mapZoom);
             });
 
-            var lat, lng, initZoom;
-            lat = 20;
-            lng = -10;
-            initZoom = 3;
-                
-            // var mapElem = document.getElementById('map');
-            var map = L.map('map',
-                {
-                    minZoom: 2,
-                    maxZoom: 15,
-                    fullscreenControl: true,
-                    maxBounds:L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180)),
-                    maxBoundsViscosity: 1.0
-                });
-            map.setView([lat, lng], initZoom);
-            var elev = 0;
-            var layer = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png').addTo(map);
-            var mumbai_popn_density = false; //initialised to undefined by default
-            let crowd_sourced_photos = [];
-            var vulnerability_map;
-
-            var fmTileUrl = 'https://www.floodmap.net/getFMTile.ashx?x={x}&y={y}&z={z}&e=';
-            var floodLayer = L.tileLayer(fmTileUrl + elev, {
-                attribution: '© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors,<a href="https://www.mapzen.com/rights">Mapzen</a>, <a href = "https://floodmap.net">Floodmap.net</a>',
-                opacity: 0.5
+        var lat, lng, initZoom;
+        lat = mapCenter[0];
+        lng = mapCenter[1];
+        initZoom = mapZoom;
+            
+        // var mapElem = document.getElementById('map');
+        var map = L.map('map',
+            {
+                minZoom: 2,
+                maxZoom: 15,
+                fullscreenControl: true,
+                maxBounds:L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180)),
+                maxBoundsViscosity: 1.0
             });
+        map.setView([lat, lng], initZoom);
+        
+        map.on('click',function(e) {
+            L.popup().setContent(e.latlng.lat.toFixed(6) + ', ' + e.latlng.lng.toFixed(6))
+                     .setLatLng(e.latlng)
+                     .openOn(map1);
+        });
 
-            map.addLayer(floodLayer);
+        var layer = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png').addTo(map);
+        var mumbai_popn_density = false; //initialised to undefined by default
+        let crowd_sourced_photos = [];
+        var vulnerability_map;
+
+        var fmTileUrl = 'https://www.floodmap.net/getFMTile.ashx?x={x}&y={y}&z={z}&e=';
+        var floodLayer = L.tileLayer(fmTileUrl + elev, {
+            attribution: '© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors,<a href="https://www.mapzen.com/rights">Mapzen</a>, <a href = "https://floodmap.net">Floodmap.net</a>, <a href = "https://github.com/akshaykore/mumdata/">Akshay Kore</a>, <a href = "https://doi.org/10.1029/2022GL098477">Wu et al (2022)</a>',
+            opacity: 0.5
+        });
+
+        map.addLayer(floodLayer);
+
+            function setElev(elevS) {
+                if (isNaN(elevS)) {
+                    alert("Please enter only numeric value!");
+                    return;
+                }
+                elevS = Math.round(elevS);
+                document.getElementById("elev").value = elevS;
+                elev = elevS;
+                //infowindow.close();
+                refresh();
+            }
+
+            function refresh() {
+                floodLayer.setUrl(fmTileUrl + elev);
+            }
+
+            function updateAMISAFE(){
+                center = map.getCenter();
+                document.getElementById("amisafeEntry").value =  Math.round(center.lat * 1000000) / 1000000 + ',' + Math.round(center.lng * 1000000) / 1000000;
+            }
+
+        setElev(elev,false);
+
 
             function onEachFeature(feature, layer) {
                 // does this feature have a property named popupContent?
@@ -517,90 +496,4 @@
 
       </script>
       
-
-<!-- <a href="#myPanel" id = "logoheader" ><div id="innertext">Center Map</div></a> -->
-        
-    <!------------------------Side Panel----------------->
-        <div data-role="panel" id="myPanel" data-display="overlay" data-position="right" data-dismissible="false">    
-    <!-- button to close the panel-->
-        <a href="#myPanel" id = "logoheader"><div id="innertext"><i class="fa fa-arrow-right"></i>&nbsp; Close Panel</div></a>
-        <a href="#mapdisplayoptionspanel"><div id="mapdisplaytext" title="Change color of the Basemap">Base Map Settings &nbsp; <i class="fa fa-cog"></i></div></a>    
-        
-        <!------------------------layers----------------->
-            <!--input type="button" onclick="reload()"-->
-            <div id="layer">
-            
-            </div>
-        <!------------------------popup button----------------->    
-            <div align="center">
-                <a href="#datalistpanel" onclick="createlist()"><div id="addbutton"><div id="innertextbutton" title="Add a Data Layer">Add Dataset +</div></div></a>
-                
-            </div>
-            
-            
-            </div>
-      
-      <div data-role="panel" id="datalistpanel" data-display="overlay" data-position="right" data-dismissible="false">
-          <div id="datalisttitle">Datasets &nbsp; <i class="fa fa-database"></i></div>
-                 
-
-          <div id="datalist">
-                    
-                </div>
-  <!-- panel content goes here -->
-          <div align="center">
-                <a href="#myPanel" data-rel="back" id="createcontrollistbutton" onclick="createcontrollist(); createlist()"><div id="addbuttonpopup"><div id="innertextbutton">Add Selected Dataset +</div></div></a>
-                </div> 
-</div>
-      
-      <div data-role="panel" id="mapdisplayoptionspanel" data-display="overlay" data-position="right" data-dismissible="false">
-          <div id="mapdisplaytext" ></div>
-        <a href="#myPanel" id = "logoheader" title="Go back to main panel"><div id="innertext"><i class="fa fa-arrow-left"></i>&nbsp; Main Panel</div></a>      
-        
-        
-
-
-          <!-- <div id="mapdisplaysettings">
-              <br>
-              <div align="center">
-              <div id="addbuttonpopup" onclick="makedefaultstyle();"><div id="innertextbutton">Default &nbsp; <i class="fa fa-wrench"></i></div></div></div>
-              <svg width="100%" height="10">
-  <rect width="100%" height="1" style="fill:darkgrey;stroke-width:0;stroke:rgb(0,0,0);" />
-</svg>
-                <div id="mapdispalysettingselement" align="center">
-                    <div id="mapdispalysettingselementtext">Saturation</div>
-                    <input type="range" name="saturation" min="-100" max="100" value="-100" onchange="changebackgroundsaturation(this.value)">
-              </div>
-              <div id="mapdispalysettingselement" align="center">
-                    <div id="mapdispalysettingselementtext">Lightness</div>
-                    <input type="range" name="lightness" min="-100" max="100" value="-30" onchange="changebackgroundlightness(this.value)">
-              </div>
-              
-              
-                    
-                </div> -->
-  <!-- panel content goes here -->
-          <div align="center">
-                <div onclick="initMap();"><div id="addbuttonpopup"><div id="innertextbutton">Update Map View</div></div></div>
-                </div> 
-</div>
- 
-      
-
-        <!------------------------popup ends----------------->
-        <div id="floating-panel">
-      <!--input type="button" class="buttondisplay" value="1992" onclick="overlay.toggleDOM();"  ></input>
-      <input type="button" class="buttondisplay" value="1992" onclick="overlay.toggleDOM();"  ></input-->
-    </div>
-    
-    
-    <div id="map"></div>
- 
-    
-      
-
-    <script async defer
-      src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD4IOWm6GGxVNy-75IOt0QnIyEZEIeWVuQ&callback=initMap">
-        </script>
-  </body>
-</html>
+{% endblock %}

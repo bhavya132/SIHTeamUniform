@@ -1,42 +1,28 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Coast Map
+    AM I SAFE
 {% endblock %}
 
 {% block main %}
-<div id="mapPanel" class="col-md-7">
-    <div style="position:relative;">
-        <div id="map_canvas" style="width:100%;height:600px;">
+        <!-- leaflet map container -->
+        <div id="mapPanel" style="width:100%;height:700px;"></div>
+        <!-- dropdown list -->
+        <div id="floating-dropdown"><div id="dd" class="wrapper-dropdown-5" tabindex="1"><img src="{{ url_for('static',filename='img/mumdatafull.svg')}}" height="30"  align="top" style="padding-top:10px;" >
+            <select class="wrapper-dropdown-5" id="basemapsAMISAFE" ></select> 
+            </div>
         </div>
-        <div id="basemaps-wrapper" class="leaflet-bar">
-            <select id="basemaps" ></select>
+        <div class="control-center" title = 'Click to return to flood simulator'>Flood simulator 
+            <a href="/test">
+            <span class="link-spanner"></span>
+            </a>
         </div>
-    </div>
-</div>
 {% endblock %}
 
 {% block javascript %}
+<script>
 
-    <script>
-        // SSP GPP
-    String.prototype.format = function () {
-        var i = 0, args = arguments;
-        return this.replace(/{}/g, function () {
-            return typeof args[i] != 'undefined' ? args[i++] : '';
-        });
-    };
-
-    var lat, lng, intitZoom;
-    
-    var lat = "{{lat}}";
-    var lng = "{{lon}}";
-    var itsxn_dict = JSON.parse('{{itsxn_dict | tojson}}');
-    console.log('itsxn_dict:', itsxn_dict);
-    initZoom = 15;
-
-    var mapElem = document.getElementById('map_canvas');
-    var map = L.map('map_canvas',
+    var map = L.map('mapPanel',
         {
             minZoom: 2,
             maxZoom: 15,
@@ -44,16 +30,26 @@
             maxBounds:L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180)),
             maxBoundsViscosity: 1.0
         });
+    
+    var lat, lng, intitZoom;
+    var lat = "{{lat}}";
+    var lng = "{{lon}}";
+    initZoom = 15;
     map.setView([lat, lng], initZoom);
     
     var elev = 1; // create a drop down level of 1m and 2m
     
     var circle_colors = {
         4:{'color':'red', 'fillColor': '#ff2b2b','desc': 'High risk'}, 
-        3:{'color':'orange','fillColor':'#ff8b2b','desc': 'Moderate risk'},
+        3:{'color':'orange','fillColor':'#fc6b03','desc': 'Moderate risk'},
         2:{'color':'yellow','fillColor':'#ffed2b','desc': 'Low risk'},
         1:{'color':'green','fillColor':'#49c928','desc': 'Low risk'}
     };
+
+    
+    var itsxn_dict = JSON.parse('{{itsxn_dict | tojson}}');
+    console.log('itsxn_dict:', itsxn_dict);
+    
 
     function assignColorCode(rad_50, rad_100) {
         if (rad_50 === 'True' && rad_100 === 'True') {
@@ -105,7 +101,7 @@
     console.log('amisafe_json:', amisafe_json);
 
     (function() {
-        var elm = document.getElementById('basemaps'),
+        var elm = document.getElementById('basemapsAMISAFE'),
             df = document.createDocumentFragment();
         
         var options_list = ['1 meters', '2 meters'];
@@ -122,17 +118,16 @@
     var layer = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png').addTo(map);
 
     document
-        .querySelector('#basemaps')
+        .querySelector('#basemapsAMISAFE')
         .addEventListener('change', function (e) {
             //$('#myModal').modal();
             //e.target.value = 'OpenStreetMap';
             
             var basemap = e.target.value;
             setBasemap(basemap);
-            updateLegend(basemap);
+            
         });
     
-    var isColorFloodMap;
     var fmTileUrl = 'https://www.floodmap.net/getFMTile.ashx?x={x}&y={y}&z={z}&e=';
     var floodLayer = L.tileLayer(fmTileUrl + elev, {
         attribution: '© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors,<a href="https://www.mapzen.com/rights">Mapzen</a>, <a href = "https://floodmap.net">Floodmap.net</a>',
@@ -268,7 +263,6 @@
             refresh(2);
         }
     }
-
 </script>
-
+      
 {% endblock %}

@@ -79,7 +79,7 @@ def my_map():
 @app.route("/amisafe", methods=["POST"])
 def am_i_safe():
     coord = request.form.get("coord")
-    print(f'coord {coord}')
+    print(f'coord: {coord}')
     lat, lon = coord.split(',')
     lat, lon = float(lat.strip()), float(lon.strip())
     ais = amisafe.AmISafe(lat_deg=lat,lon_deg=lon,zoom=15)
