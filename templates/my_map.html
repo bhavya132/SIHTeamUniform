@@ -99,11 +99,20 @@
                 maxBoundsViscosity: 1.0
             });
         map.setView([lat, lng], initZoom);
-        
+
         map.on('click',function(e) {
             L.popup().setContent(e.latlng.lat.toFixed(6) + ', ' + e.latlng.lng.toFixed(6))
                      .setLatLng(e.latlng)
-                     .openOn(map1);
+                     .openOn(map);
+        });
+        
+        console.log('amisafe value:',document.getElementById("amisafe").value);
+        map.on("zoom", function (e) {
+            updateAMISAFE();
+        });
+
+        map.on("move", function (e) {
+            updateAMISAFE();
         });
 
         var layer = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png').addTo(map);
@@ -137,8 +146,8 @@
 
             function updateAMISAFE(){
                 center = map.getCenter();
-                document.getElementById("amisafeEntry").value =  Math.round(center.lat * 1000000) / 1000000 + ',' + Math.round(center.lng * 1000000) / 1000000;
-            }
+                document.getElementById("amisafe").value =  Math.round(center.lat * 1000000) / 1000000 + ',' + Math.round(center.lng * 1000000) / 1000000;
+            };
 
         setElev(elev,false);
 
