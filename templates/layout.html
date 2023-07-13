@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <title>EduFlood+{% block title %}{% endblock %}</title>
 
-      <link rel="icon" type="image/png" href="{{ url_for('static',filename='img/icoblack32.ico')}}">
+      <link rel="icon" type="image/png" href="{{ url_for('static',filename='img/favicon.ico')}}">
 
         <script src="https://kit.fontawesome.com/4fa2f753fb.js" crossorigin="anonymous"></script>
       <!-- <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,600,700' rel='stylesheet' type='text/css'> -->
@@ -14,7 +14,9 @@
         <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/floating-form.css')}}" />
         <!-- floating elev -->
         <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/flood-elev.css')}}" />
-        
+        <!-- floating legend -->
+        <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/floating-layers.css')}}" /> -->
+
         <script src="{{ url_for('static',filename='js/jquery.js')}}"></script>
         <!-- <script src="{{ url_for('static',filename='js/jquery.mobile-1.4.5.js')}}"></script> -->
         
@@ -40,7 +42,9 @@
         <!--Leaflet Foolscreen -->
         <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
         <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
-      
+        <!-- leaflet wms legend -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/leaflet.wmslegend.css')}}">
+        <script src="{{ url_for('static',filename='js/leaflet.wmslegend.js')}}"></script>
       
       <script>
         String.prototype.format = function () {

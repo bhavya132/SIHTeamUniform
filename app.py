@@ -33,48 +33,13 @@ def main():
             if ('flood' in list(db_result)) and (db_result['flood'] is True):
                 flooded_results[i] = db_result
     print(flooded_results)
-    return render_template("index.html",flooded_results = flooded_results)
-
-
-@app.route("/test")
-def test_georaster():
-    result = db.collection('floods').stream()
-    flooded_results = dict()
-    if result:
-        for i,r in enumerate(result):
-            db_result = r.to_dict()
-            if ('flood' in list(db_result)) and (db_result['flood'] is True):
-                flooded_results[i] = db_result
-    print(flooded_results)
 
     df = pd.read_csv('https://gist.githubusercontent.com/mickeykedia/9d9144072c5f637c26995569dd347614/raw/b65134846607235adf4ad6498713deed77d3b4b5/ward_level_collated.csv')
     df_cropped = df.loc[:,['Ward_Alphabet','Ward_Names','TOT_P_DEN']].set_index(['Ward_Alphabet'])
     mumbai_dict = df_cropped.to_dict('index')
 
     return render_template("my_map.html",flooded_results = flooded_results, mumbai_dict=mumbai_dict)
-    # mumbai_land_sub_fp = r'mumbai_land_subsidence_clipped.tif'
-    # # with open(mumbai_land_sub_fp, "rb") as image_file:
-    # #     encoded_string = base64.b64encode(image_file.read())
 
-    # return render_template("load-via-script-tag.html",mumbai_land_sub_fp=mumbai_land_sub_fp)
-
-@app.route("/my_map")
-def my_map():
-    result = db.collection('floods').stream()
-    flooded_results = dict()
-    if result:
-        for i,r in enumerate(result):
-            db_result = r.to_dict()
-            if ('flood' in list(db_result)) and (db_result['flood'] is True):
-                flooded_results[i] = db_result
-    print(flooded_results)
-
-    df = pd.read_csv('https://gist.githubusercontent.com/mickeykedia/9d9144072c5f637c26995569dd347614/raw/b65134846607235adf4ad6498713deed77d3b4b5/ward_level_collated.csv')
-    df_cropped = df.loc[:,['Ward_Alphabet','Ward_Names','TOT_P_DEN']].set_index(['Ward_Alphabet'])
-    mumbai_dict = df_cropped.to_dict('index')
-
-    return render_template("coastmap.html",flooded_results = flooded_results, mumbai_dict=mumbai_dict)
-    # return render_template("my_map.html")
 
 @app.route("/amisafe", methods=["POST"])
 def am_i_safe():
@@ -87,61 +52,11 @@ def am_i_safe():
     print(f'itersection: {itsxn_dict}')
     return render_template("amisafe.html", lat=lat, lon=lon, itsxn_dict=itsxn_dict)
 
-@app.route("/floodmap")
-def test_floodmap():
-    result = db.collection('floods').stream()
-    flooded_results = []
-    if result:
-        for r in result:
-            db_result = r.to_dict()
-            if ('flood' in list(db_result)) and (db_result['flood'] is True):
-                flooded_results.append(db_result)
-    print(flooded_results)
-
-    df = pd.read_csv('https://gist.githubusercontent.com/mickeykedia/9d9144072c5f637c26995569dd347614/raw/b65134846607235adf4ad6498713deed77d3b4b5/ward_level_collated.csv')
-    df_cropped = df.loc[:,['Ward_Alphabet','Ward_Names','TOT_P_DEN']].set_index(['Ward_Alphabet'])
-    mumbai_dict = df_cropped.to_dict('index')
-
-    return render_template("floodmap.html",flooded_results = flooded_results, mumbai_dict=mumbai_dict)
-
-@app.route("/geemap")
-def test_geemap():
-    return render_template("floodmap_gee.html")
-
-@app.route("/mumbaiward")
-def test_mumbai():
-    return render_template("mumbai_ward.html")
-
-@app.route("/topojson")
-def test_topojson():
-    return render_template("test_topojson.html")
-
-@app.route("/mumbaipopn")
-def test_mumbaipopn():
-    df = pd.read_csv('https://gist.githubusercontent.com/mickeykedia/9d9144072c5f637c26995569dd347614/raw/b65134846607235adf4ad6498713deed77d3b4b5/ward_level_collated.csv')
-    df_cropped = df.loc[:,['Ward_Alphabet','Ward_Names','TOT_P_DEN']].set_index(['Ward_Alphabet'])
-    mumbai_dict = df_cropped.to_dict('index')
-    return render_template("mumbaipopn.html",mumbai_dict=mumbai_dict)
-
-@app.route("/wms_test")
-def wms_test():
-    return render_template("wms_test.html")
-
-@app.route("/svg_test")
-def svg_test():
-    return render_template("svg_test.html")
-
 if __name__ == "__main__":
     # for r in result:
     #     print(r.to_dict())
     app.jinja_env.auto_reload = True
     app.config["TEMPLATES_AUTO_RELOAD"] = True
-    app.run(debug=True)
-    # flooded_results = dict()
-    # if result:
-    #     for i,r in enumerate(result):
-    #         db_result = r.to_dict()
-    #         if ('flood' in list(db_result)) and (db_result['flood'] is True):
-    #             flooded_results[i] = db_result
-    # print(flooded_results)
+    app.run(debug=False)
+
     # app.run(port=1111)

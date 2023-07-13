@@ -152,6 +152,6 @@ class AmISafe:
         return itsxn_dict
     
 if __name__ == "__main__":
-    ais = AmISafe(lat_deg=19.090866,lon_deg=72.831018,zoom=15)
+    ais = AmISafe(lat_deg=-31.970513,lon_deg=115.778649,zoom=15)
     itsxn_dict = ais.check_intersection(e1 = 1, e2 = 2,r1_meters = 50, r2_meters = 100, plot = True)
     print(f'itersection: {itsxn_dict}')

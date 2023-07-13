@@ -8,12 +8,12 @@
         <!-- leaflet map container -->
         <div id="mapPanel" style="width:100%;height:700px;"></div>
         <!-- dropdown list -->
-        <div id="floating-dropdown"><div id="dd" class="wrapper-dropdown-5" tabindex="1"><img src="{{ url_for('static',filename='img/mumdatafull.svg')}}" height="30"  align="top" style="padding-top:10px;" >
+        <div id="floating-dropdown"><div id="dd" class="wrapper-dropdown-5" tabindex="1"><img src="{{ url_for('static',filename='img/apple-touch-icon.png')}}" height="30"  align="top" style="padding-top:10px;" >
             <select class="wrapper-dropdown-5" id="basemapsAMISAFE" ></select> 
             </div>
         </div>
         <div class="control-center" title = 'Click to return to flood simulator'>Flood simulator 
-            <a href="/test">
+            <a href="/">
             <span class="link-spanner"></span>
             </a>
         </div>
@@ -37,6 +37,12 @@
     initZoom = 15;
     map.setView([lat, lng], initZoom);
     
+    map.on('click',function(e) {
+            L.popup().setContent(e.latlng.lat.toFixed(6) + ', ' + e.latlng.lng.toFixed(6))
+                     .setLatLng(e.latlng)
+                     .openOn(map);
+        });
+        
     var elev = 1; // create a drop down level of 1m and 2m
     
     var circle_colors = {

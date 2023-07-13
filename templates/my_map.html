@@ -8,7 +8,7 @@
         <!-- leaflet map container -->
         <div id="map" style="width:100%;height:700px;"></div>
         <!-- dropdown list -->
-        <div id="floating-dropdown"><div id="dd" class="wrapper-dropdown-5" tabindex="1"><img src="{{ url_for('static',filename='img/mumdatafull.svg')}}" height="30"  align="top" style="padding-top:10px;" >
+        <div id="floating-dropdown"><div id="dd" class="wrapper-dropdown-5" tabindex="1"><img src="{{ url_for('static',filename='img/apple-touch-icon.png')}}" height="30"  align="top" style="padding-top:10px;" >
             <select class="wrapper-dropdown-5" id="basemaps" ></select> 
             </div>
         </div>
@@ -41,13 +41,17 @@
       
             <div class="contact-icon" title="Check your location for your flood risk">
                 <i class="fa-solid fa-shield-heart"></i>
-                <!-- <h3>AM I SAFE</h3> -->
+                <h3>Am I Safe</h3>
             </div>
-                <h3>AM I SAFE</h3>
+                
           </div>
 
+          
+
           <script src="{{ url_for('static',filename='js/floating-form.js')}}"></script>
-          <!-- <script src="{{ url_for('static',filename='js/floating-elev.js')}}"></script> -->
+        
+        
+
 {% endblock %}          
 
 {% block javascript %}
@@ -67,15 +71,19 @@
             elm.appendChild(df);
         }());
 
-        document
-            .querySelector('#basemaps')
-            .addEventListener('change', function (e) {
-                
-                var basemap = e.target.value;
-                setBasemap(basemap);
-            });
-            
+        var legend_imgs = {
+            'Basemap': 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+            'Population density': "https://live.staticflickr.com/65535/53037896916_d0535749df_o.png",
+            'Land use': "https://live.staticflickr.com/65535/53037319537_59106904dd_o.png",
+            'Land subsidence': "https://live.staticflickr.com/65535/53038383823_66e50cd0c5_o.png",
+            'Topography': "https://live.staticflickr.com/65535/53037896931_77802e80a5_o.png",
+            '2005 Mumbai flood': 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+            "Crowd-Sourced Photos": 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+            'Vulnerability index': "https://live.staticflickr.com/65535/53037319522_c2a141c886_o.png",
+            'Vulnerability classification':"https://live.staticflickr.com/65535/53037175697_8545f2a21a_o.png"
+        };
 
+        
         var elev = document.getElementById('elev').value;
         var mapCenter = [19.0861289, 72.90870667];
         var mapZoom = 11;
@@ -98,9 +106,12 @@
                 maxBounds:L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180)),
                 maxBoundsViscosity: 1.0
             });
-        map.setView([lat, lng], initZoom);
 
+        map.setView([lat, lng], initZoom);
+        
         map.on('click',function(e) {
+            document.getElementById("amisafe").value =  Math.round(e.latlng.lat * 1000000) / 1000000 + ',' + Math.round(e.latlng.lng * 1000000) / 1000000;
+
             L.popup().setContent(e.latlng.lat.toFixed(6) + ', ' + e.latlng.lng.toFixed(6))
                      .setLatLng(e.latlng)
                      .openOn(map);
@@ -115,6 +126,17 @@
             updateAMISAFE();
         });
 
+        document
+            .querySelector('#basemaps')
+            .addEventListener('change', function (e) {
+                
+                // var basemap = e.target.value;
+                var basemap = e.target.value;
+                setBasemap(basemap);
+                console.log('basemap:', basemap);
+                updateLegend(basemap);
+            });
+
         var layer = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png').addTo(map);
         var mumbai_popn_density = false; //initialised to undefined by default
         let crowd_sourced_photos = [];
@@ -127,6 +149,8 @@
         });
 
         map.addLayer(floodLayer);
+        // initialise legend container
+        var legend_container = L.wmsLegend(legend_imgs['Basemap'],map);
 
             function setElev(elevS) {
                 if (isNaN(elevS)) {
@@ -502,6 +526,34 @@
 
                 
             };
+
+        function updateLegend(basemap){
+            
+            if ((basemap === 'Population density') || (basemap === 'Land use') || (basemap === 'Land subsidence') || (basemap === 'Topography') || (basemap === 'Vulnerability index') || (basemap === 'Vulnerability classification')) {
+                if (legend_container){
+                    map.removeControl(legend_container);
+                }
+                
+                legend_container = L.wmsLegend(legend_imgs[basemap],map);
+            }
+
+            else {
+                map.removeControl(legend_container);
+            }
+        };
+        
+        // var legend = L.control({position: 'topleft'});
+
+        // legend.onAdd = function (map) {
+
+        //     var div = L.DomUtil.create('div', 'info legend');
+        //     div.innerHTML = "<img src='{}'>".format(legend_imgs[basemap]);
+
+        //     return div;
+        // };
+
+        // legend.addTo(map);
+
 
       </script>
       

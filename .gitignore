@@ -4,7 +4,10 @@ package.json
 floodbase.json
 mumbai_land_subsidence.tif
 Mumbai_land_subsidence.txt
-static/
+mumbai_dem_clipped.tif
+mumbai_dem_clipped.tif.aux.xml
 layer/
 img/
 flood_image/
+__pycache__
+react_ui/
