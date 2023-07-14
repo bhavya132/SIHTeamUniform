@@ -60,7 +60,7 @@
             var elm = document.getElementById('basemaps'),
                 df = document.createDocumentFragment();
             // var options_list = ['OpenStreetMap',"OpenTopoMap",'Mumbai Population Density',"Crowd-Sourced Photos",'Land use','Mumbai vulnerability map','Land subsidence','Topography','Road network map','Historical flood map','Global vulnerability map'];
-            var options_list = ['Basemap','Population density','Land use','Land subsidence','Topography','2005 Mumbai flood',"Crowd-Sourced Photos",'Vulnerability index', 'Vulnerability classification'];
+            var options_list = ['Basemap','Population density','Land use','Land subsidence','Topography','2005 Mumbai flood',"Crowd-Sourced Photos",'Flood shelters','Vulnerability index', 'Vulnerability classification'];
             for (var j = 0; j < options_list.length; j++){
                 var option = document.createElement('option');
                 option.value = options_list[j];
@@ -79,6 +79,7 @@
             'Topography': "https://live.staticflickr.com/65535/53037896931_77802e80a5_o.png",
             '2005 Mumbai flood': 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
             "Crowd-Sourced Photos": 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+            'Flood shelters': 'https://live.staticflickr.com/65535/53044842070_752f4dd701_m.jpg',
             'Vulnerability index': "https://live.staticflickr.com/65535/53037319522_c2a141c886_o.png",
             'Vulnerability classification':"https://live.staticflickr.com/65535/53037175697_8545f2a21a_o.png"
         };
@@ -140,6 +141,7 @@
         var layer = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png').addTo(map);
         var mumbai_popn_density = false; //initialised to undefined by default
         let crowd_sourced_photos = [];
+        let shelter_photos = [];
         var vulnerability_map;
 
         var fmTileUrl = 'https://www.floodmap.net/getFMTile.ashx?x={x}&y={y}&z={z}&e=';
@@ -260,6 +262,8 @@
                 'orange': "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png",
                 'red': "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png"
             };
+
+            var shelter_icon_url = "https://live.staticflickr.com/65535/53042953595_4977a9d64d_o.png";
             
             var mumbai_vulnerability_map = {
                 'vulnerability_index': {
@@ -268,6 +272,19 @@
                     "LR": [18.832, 73.1697]
                 }
             };
+
+            var shelter_list = [{'lat': 19.114259,
+                                'lon': 72.839283,
+                                'message': 'RT @DevaABC #rainhosts I live near Juhu lane and can accommodate around 4- 5 women! #MumbaiRains'},
+                                {'lat': 19.08482,
+                                'lon': 72.841307,
+                                'message': "RT @hithere If you're stuck near #Khar or #Santacruz West, come over. We have a cat and ice cream. #Rainhosts #MumbaiRain\t"},
+                                {'lat': 19.053412,
+                                'lon': 72.835699,
+                                'message': 'RT @TheABC: If anyone is stuck at Hill Road, you are more than welcome to come over. #Bandra #MumbaiRains #RainHosts'},
+                                {'lat': 19.10982,
+                                'lon': 72.907446,
+                                'message': 'RT @hello249: Anyone stuck in Powai, Kanjurmarg please contact if you want to stay over. #Rainhosts'}];
 
             function setBasemap(basemap) {
                 if (basemap === 'Basemap') {
@@ -285,6 +302,14 @@
                             map.removeLayer(crowd_sourced_photos[i]);
                         }
                         crowd_sourced_photos = [];
+                    }
+
+                    if (shelter_photos.length > 1) {
+                        for (var i = 0; i < shelter_photos.length; i++) {
+                            map.removeLayer(shelter_photos[i]);
+                        }
+
+                        shelter_photos = [];
                     }
 
                     
@@ -432,6 +457,24 @@
                     floodLayer.bringToFront();
                 }
 
+                else if (basemap === 'Flood shelters') {
+                    
+                    const flood_shelters = L.icon({
+                            iconUrl: shelter_icon_url,
+                            iconSize: [25, 25],
+                            iconAnchor: [16, 37],
+                            popupAnchor: [0, -28]
+                        });
+
+                    for (var i=0; i < shelter_list.length; i++) {
+                        const shelter_markers = L.marker([shelter_list[i]['lat'],shelter_list[i]['lon']], {icon: flood_shelters}).addTo(map);
+                        shelter_markers.bindPopup(shelter_list[i]['message']).openPopup();
+                        shelter_photos.push(shelter_markers);
+                    }
+    
+                    
+                }
+
                 else if (basemap === 'Vulnerability index') {
                     if (mumbai_popn_density) {
                         map.removeLayer(geojson);
@@ -529,7 +572,7 @@
 
         function updateLegend(basemap){
             
-            if ((basemap === 'Population density') || (basemap === 'Land use') || (basemap === 'Land subsidence') || (basemap === 'Topography') || (basemap === 'Vulnerability index') || (basemap === 'Vulnerability classification')) {
+            if ((basemap === 'Population density') || (basemap === 'Land use') || (basemap === 'Land subsidence') || (basemap === 'Topography') || (basemap === 'Vulnerability index') || (basemap === 'Vulnerability classification')  || (basemap === 'Flood shelters')) {
                 if (legend_container){
                     map.removeControl(legend_container);
                 }
