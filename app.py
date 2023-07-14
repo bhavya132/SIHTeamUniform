@@ -50,7 +50,15 @@ def am_i_safe():
     ais = amisafe.AmISafe(lat_deg=lat,lon_deg=lon,zoom=15)
     itsxn_dict = ais.check_intersection(e1 = 1, e2 = 2,r1_meters = 50, r2_meters = 100, plot = False)
     print(f'itersection: {itsxn_dict}')
-    return render_template("amisafe.html", lat=lat, lon=lon, itsxn_dict=itsxn_dict)
+
+    result = db.collection('floods').stream()
+    flooded_results = dict()
+    if result:
+        for i,r in enumerate(result):
+            db_result = r.to_dict()
+            if ('flood' in list(db_result)) and (db_result['flood'] is True):
+                flooded_results[i] = db_result
+    return render_template("amisafe.html", lat=lat, lon=lon, itsxn_dict=itsxn_dict,flooded_results = flooded_results)
 
 if __name__ == "__main__":
     # for r in result:

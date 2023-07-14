@@ -183,6 +183,27 @@ font-size: 12px;
     float: right;
 }
 
+#floating-date-range-picker {
+    position: absolute;
+    top: 250px;
+    right: 35px;
+    z-index: 9999;
+    background: transparent;
+    border: 'none';
+    width: 250px;
+    float: right;
+    color: #d6e9ff;
+  }
+
+#daterange {
+    font-size: 12px;
+    padding: 8px 8px;
+    font-family: "Roboto", sans-serif;
+    border: 'none';
+    border-radius: 8px;
+    color: #000000;
+}
+
 a:link {
     text-decoration: none;
 }

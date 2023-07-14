@@ -45,6 +45,74 @@
         
     var elev = 1; // create a drop down level of 1m and 2m
     
+    var flooded_results= JSON.parse('{{flooded_results | tojson}}');
+                    
+    console.log('flooded results:', flooded_results);
+    
+    var leaflet_color_icon = {
+                'yellow': "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png",
+                'orange': "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png",
+                'red': "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png"
+            };
+
+    for (var flood_idx in flooded_results){
+        var flood_img = flooded_results[flood_idx]['image']; //icon url
+        var flood_exists = flooded_results[flood_idx]['flood'];
+        var flood_severity = flooded_results[flood_idx]['flood_severity'];
+        var flood_coord = [ flooded_results[flood_idx]['lon'], flooded_results[flood_idx]['lat']];
+        console.log(flood_img);
+        console.log('flood exist:', flood_exists);
+        console.log('flood coord:', flood_coord);
+        console.log('flood severity:', flood_severity)
+        
+        if (flood_severity === 'low') {
+            var icon_url = leaflet_color_icon['yellow'];
+        }
+
+        else if (flood_severity === 'moderate') {
+            var icon_url = leaflet_color_icon['orange'];
+        }
+
+        else {
+            var icon_url = leaflet_color_icon['red'];
+        }
+
+        const flood_icon = L.icon({
+            iconUrl: icon_url,
+            iconSize: [25, 41],
+            iconAnchor: [16, 37],
+            popupAnchor: [0, -28]
+        });
+        
+        var geojsonFeature = {
+            "type": "Feature",
+            "properties": {
+                // "name": "Coors Field",
+                // "amenity": "Baseball Stadium",
+                // "popupContent":"<b>Flood:</b> " + flood_exists
+                popupContent: '<img src="{}" height="120px" width="150px"/>'.format(flood_img)
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": flood_coord
+            }
+        };
+
+        const coorsLayer = L.geoJSON(geojsonFeature, {
+
+            pointToLayer(feature, latlng) {
+                return L.marker(latlng, {icon: flood_icon});
+            },
+            // onEachFeature
+            onEachFeature(feature, layer) {
+                if (feature.properties && feature.properties.popupContent) {
+                    layer.bindPopup(feature.properties.popupContent)
+                }
+            }
+        }).addTo(map);
+
+    }
+
     var circle_colors = {
         4:{'color':'red', 'fillColor': '#ff2b2b','desc': 'High risk'}, 
         3:{'color':'orange','fillColor':'#fc6b03','desc': 'Moderate risk'},

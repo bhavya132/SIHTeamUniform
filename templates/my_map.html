@@ -45,8 +45,10 @@
             </div>
                 
           </div>
-
-          
+          <!-- daterange picker -->
+          <div id="floating-date-range-picker">
+            <i class="fa-regular fa-calendar"></i><input id="daterange" type="text" name="daterange" title="Select date range to filter crowd sourced photos" value="07/14/2023 - 07/15/2023" />
+          </div>
 
           <script src="{{ url_for('static',filename='js/floating-form.js')}}"></script>
         
@@ -57,6 +59,7 @@
 {% block javascript %}
       <script>
         (function() {
+            //drop down list
             var elm = document.getElementById('basemaps'),
                 df = document.createDocumentFragment();
             // var options_list = ['OpenStreetMap',"OpenTopoMap",'Mumbai Population Density',"Crowd-Sourced Photos",'Land use','Mumbai vulnerability map','Land subsidence','Topography','Road network map','Historical flood map','Global vulnerability map'];
@@ -71,6 +74,137 @@
             elm.appendChild(df);
         }());
 
+        var basemap;
+        document
+            .querySelector('#basemaps')
+            .addEventListener('change', function (e) {
+                
+                // var basemap = e.target.value;
+                basemap = e.target.value;
+                setBasemap(basemap);
+                console.log('basemap:', basemap);
+                updateLegend(basemap);
+                toggleDateTimePicker(basemap);
+            });
+
+        // date range picker
+        var flooded_results = JSON.parse('{{flooded_results | tojson}}');
+        let crowd_sourced_photos = [];
+        var start_date = Date.parse("1 Jan 1800"); //in ms
+        var end_date = Date.parse("31 Dec 2050"); // in ms
+
+        $(function() {
+              $('input[name="daterange"]').daterangepicker({
+                opens: 'left',
+                showDropdowns: true
+              }, function(start, end, label) {
+                start_date = start;
+                end_date = end;
+                console.log("A new date selection was made: " + start_date + ' to ' + end_date);
+                // crowd_sourced_photos = []; //clear all entries and filter again
+                
+                if (basemap === 'Crowd-Sourced Photos'){
+                    //clear all entries and filter again
+                    if (crowd_sourced_photos.length > 1) {
+                        for (var i = 0; i < crowd_sourced_photos.length; i++) {
+                            map.removeLayer(crowd_sourced_photos[i]);
+                        }
+                        crowd_sourced_photos = [];
+                        // filter and add to list again
+                        filterFloodImages(flooded_results, start_date, end_date);
+                        
+                    }
+                    //add back from list
+                    for (var i = 0; i < crowd_sourced_photos.length; i++){
+                        var im = crowd_sourced_photos[i];
+                        im.addTo(map);
+                    }
+                }
+              });
+            });
+        // disable calendar first
+        var dateToggle = document.getElementById('floating-date-range-picker');
+        dateToggle.style.display == "none";
+
+        function toggleDateTimePicker(basemap){
+            if (basemap === 'Crowd-Sourced Photos') {
+                dateToggle.style.display = "block";
+            }
+
+            else {
+                dateToggle.style.display == "none";
+            }  
+        };
+
+        function filterFloodImages(flooded_results, start_date, end_date) {
+            for (var flood_idx in flooded_results){
+                var flood_img = flooded_results[flood_idx]['image']; //icon url
+                var flood_exists = flooded_results[flood_idx]['flood'];
+                var flood_severity = flooded_results[flood_idx]['flood_severity'];
+                var flood_coord = [ flooded_results[flood_idx]['lon'], flooded_results[flood_idx]['lat']];
+                let flood_date = Date.parse(flooded_results[flood_idx]['date']);//change to ms
+                if ((flood_date >= start_date) && (flood_date<=end_date)){
+                    console.log(flood_img);
+                    console.log('flood exist:', flood_exists);
+                    console.log('flood coord:', flood_coord);
+                    console.log('flood severity:', flood_severity);
+                    console.log('flood date:',flood_date);
+                    
+                    if (flood_severity === 'low') {
+                        var icon_url = leaflet_color_icon['yellow'];
+                    }
+
+                    else if (flood_severity === 'moderate') {
+                        var icon_url = leaflet_color_icon['orange'];
+                    }
+
+                    else if (flood_severity === 'high'){
+                        var icon_url = leaflet_color_icon['red'];
+                    }
+
+                    const flood_icon = L.icon({
+                        iconUrl: icon_url,
+                        iconSize: [25, 41],
+                        iconAnchor: [16, 37],
+                        popupAnchor: [0, -28]
+                    });
+                    
+                    var geojsonFeature = {
+                        "type": "Feature",
+                        "properties": {
+                            // "name": "Coors Field",
+                            // "amenity": "Baseball Stadium",
+                            // "popupContent":"<b>Flood:</b> " + flood_exists
+                            popupContent: '<img src="{}" height="120px" width="150px"/><br><b>{}</b><br><i class="fa fa-heart" style="font-size:24px;color:red"><i class="fa fa-heart" style="font-size:24px;color:red"><i class="fa fa-heart" style="font-size:24px;color:red"></i>'.format(flood_img, flooded_results[flood_idx]['date'])
+                        },
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": flood_coord
+                        }
+
+                    };
+
+                    const coorsLayer = L.geoJSON(geojsonFeature, {
+
+                        pointToLayer(feature, latlng) {
+                            return L.marker(latlng, {icon: flood_icon});
+                        },
+                        // onEachFeature
+                        onEachFeature(feature, layer) {
+                            if (feature.properties && feature.properties.popupContent) {
+                                layer.bindPopup(feature.properties.popupContent)
+                            }
+                        }
+                        });
+
+                    crowd_sourced_photos.push(coorsLayer);
+
+                }
+                
+            }
+            return crowd_sourced_photos
+        };
+
         var legend_imgs = {
             'Basemap': 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
             'Population density': "https://live.staticflickr.com/65535/53037896916_d0535749df_o.png",
@@ -78,7 +212,7 @@
             'Land subsidence': "https://live.staticflickr.com/65535/53038383823_66e50cd0c5_o.png",
             'Topography': "https://live.staticflickr.com/65535/53037896931_77802e80a5_o.png",
             '2005 Mumbai flood': 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
-            "Crowd-Sourced Photos": 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+            "Crowd-Sourced Photos": "https://live.staticflickr.com/65535/53043986152_ef879f0f2c_m.jpg",
             'Flood shelters': 'https://live.staticflickr.com/65535/53044842070_752f4dd701_m.jpg',
             'Vulnerability index': "https://live.staticflickr.com/65535/53037319522_c2a141c886_o.png",
             'Vulnerability classification':"https://live.staticflickr.com/65535/53037175697_8545f2a21a_o.png"
@@ -127,20 +261,11 @@
             updateAMISAFE();
         });
 
-        document
-            .querySelector('#basemaps')
-            .addEventListener('change', function (e) {
-                
-                // var basemap = e.target.value;
-                var basemap = e.target.value;
-                setBasemap(basemap);
-                console.log('basemap:', basemap);
-                updateLegend(basemap);
-            });
+        
 
         var layer = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png').addTo(map);
         var mumbai_popn_density = false; //initialised to undefined by default
-        let crowd_sourced_photos = [];
+        
         let shelter_photos = [];
         var vulnerability_map;
 
@@ -359,76 +484,20 @@
                     vulnerability_map = L.imageOverlay(imageUrl, latLngBounds).addTo(map);
                     map.flyTo(mapCenter, mapZoom);
                     // mumbai_landuse = true;
-
+                    
                     floodLayer.bringToFront();
                 }
 
                 else if (basemap === 'Crowd-Sourced Photos') {
-                    
-                    var flooded_results= JSON.parse('{{flooded_results | tojson}}');
-                    
-                    console.log('flooded results:', flooded_results);
-                    
-                    for (var flood_idx in flooded_results){
-                        var flood_img = flooded_results[flood_idx]['image']; //icon url
-                        var flood_exists = flooded_results[flood_idx]['flood'];
-                        var flood_severity = flooded_results[flood_idx]['flood_severity'];
-                        var flood_coord = [ flooded_results[flood_idx]['lon'], flooded_results[flood_idx]['lat']];
-                        console.log(flood_img);
-                        console.log('flood exist:', flood_exists);
-                        console.log('flood coord:', flood_coord);
-                        console.log('flood severity:', flood_severity)
-                        
-                        if (flood_severity === 'low') {
-                            var icon_url = leaflet_color_icon['yellow'];
-                        }
-
-                        else if (flood_severity === 'medium') {
-                            var icon_url = leaflet_color_icon['orange'];
-                        }
-
-                        else {
-                            var icon_url = leaflet_color_icon['red'];
-                        }
-
-                        const flood_icon = L.icon({
-                            iconUrl: icon_url,
-                            iconSize: [25, 41],
-                            iconAnchor: [16, 37],
-                            popupAnchor: [0, -28]
-                        });
-                        
-                        var geojsonFeature = {
-                            "type": "Feature",
-                            "properties": {
-                                // "name": "Coors Field",
-                                // "amenity": "Baseball Stadium",
-                                // "popupContent":"<b>Flood:</b> " + flood_exists
-                                popupContent: '<img src="{}" height="120px" width="150px"/>'.format(flood_img)
-                            },
-                            "geometry": {
-                                "type": "Point",
-                                "coordinates": flood_coord
-                            }
-                        };
-
-                        const coorsLayer = L.geoJSON(geojsonFeature, {
-
-                            pointToLayer(feature, latlng) {
-                                return L.marker(latlng, {icon: flood_icon});
-                            },
-                            // onEachFeature
-                            onEachFeature(feature, layer) {
-                                if (feature.properties && feature.properties.popupContent) {
-                                    layer.bindPopup(feature.properties.popupContent)
-                                }
-                            }
-                        }).addTo(map);
-
-                        crowd_sourced_photos.push(coorsLayer);
+                    filterFloodImages(flooded_results, start_date, end_date);
+                    for (var i = 0; i < crowd_sourced_photos.length; i++){
+                        var im = crowd_sourced_photos[i];
+                        im.addTo(map);
+                        // crowd_sourced_photos.push(coorsLayer);
                     }
 
                     floodLayer.bringToFront();
+
                 }
 
                 
@@ -453,7 +522,7 @@
                     vulnerability_map = L.imageOverlay(imageUrl, latLngBounds).addTo(map);
                     map.flyTo(mapCenter, mapZoom);
                     // mumbai_landuse = true;
-
+                    
                     floodLayer.bringToFront();
                 }
 
@@ -471,8 +540,8 @@
                         shelter_markers.bindPopup(shelter_list[i]['message']).openPopup();
                         shelter_photos.push(shelter_markers);
                     }
-    
                     
+                    floodLayer.bringToFront();
                 }
 
                 else if (basemap === 'Vulnerability index') {
@@ -494,7 +563,7 @@
                     vulnerability_map = L.imageOverlay(imageUrl, latLngBounds).addTo(map);
                     
                     map.flyTo(mapCenter, mapZoom);
-
+                    
                     floodLayer.bringToFront();
                 }
 
@@ -517,7 +586,7 @@
                     vulnerability_map = L.imageOverlay(imageUrl, latLngBounds).addTo(map);
                     
                     map.flyTo(mapCenter, mapZoom);
-
+                    
                     floodLayer.bringToFront();
                 }
 
@@ -540,7 +609,7 @@
                     vulnerability_map = L.imageOverlay(imageUrl, latLngBounds).addTo(map);
                     
                     map.flyTo(mapCenter, mapZoom);
-
+                    
                     floodLayer.bringToFront();
                 }
 
@@ -572,7 +641,7 @@
 
         function updateLegend(basemap){
             
-            if ((basemap === 'Population density') || (basemap === 'Land use') || (basemap === 'Land subsidence') || (basemap === 'Topography') || (basemap === 'Vulnerability index') || (basemap === 'Vulnerability classification')  || (basemap === 'Flood shelters')) {
+            if ((basemap === 'Population density') || (basemap === 'Land use') || (basemap === 'Land subsidence') || (basemap === 'Topography') || (basemap === 'Vulnerability index') || (basemap === 'Vulnerability classification')  || (basemap === 'Flood shelters')  || (basemap === 'Crowd-Sourced Photos')) {
                 if (legend_container){
                     map.removeControl(legend_container);
                 }

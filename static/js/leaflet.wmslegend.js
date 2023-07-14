@@ -49,6 +49,7 @@ L.Control.WMSLegend = L.Control.extend({
             this.img.style.display = 'none';
             this.container.style.height = '20px';
             this.container.style.width = '20px';
+
         }
     },
 });
