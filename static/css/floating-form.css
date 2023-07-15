@@ -7,13 +7,13 @@
   padding: 16px;
   font-family: "Roboto", sans-serif;
   font-size: 30px;
-  color: #ff827e;
+  color: #951e1a;
 
 }
 
 .floating-contact-form .contact-icon i {
   font-size: 42px;
-  color: #ff827e;
+  color: #951e1a;
   transition: all 300ms ease;
 }
 
@@ -51,7 +51,7 @@
 
 .floating-contact-form h3 {
   font-size: 30px;
-  color: #ff827e;
+  color: #951e1a;
   margin-top: 10px;
   position: relative;
 }
@@ -60,7 +60,7 @@
   content: "";
   height: 3px;
   width: 36px;
-  background: #ff827e;
+  background: #951e1a;
   position: absolute;
   left: 0;
   bottom: -4px;
@@ -125,7 +125,7 @@
 
 .floating-contact-form form input[type="submit"] {
   border: none;
-  background: #ff827e;
+  background: #951e1a;
   color: #fff;
   padding: 8px 16px;
   width: 50%;
@@ -137,5 +137,5 @@
 }
 
 .floating-contact-form form input[type="submit"]:hover {
-  background: #951e1a;
+  background: #ff827e;
 }
